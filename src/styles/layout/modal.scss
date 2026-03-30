@@ -1,0 +1,71 @@
+@use "../_var.scss" as *;
+
+.modal {
+    position: absolute;
+    top: calc((100% - 60px) / 2);
+    left: calc((100% - 268px) / 2);
+    width: 240px;
+    color: $white;
+    background-color: $black-16;
+    border: 2px solid  $light-grey;
+    padding: 16px 8px;
+    font-size: 10px;
+    z-index: 3;
+
+    .warn-img {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 48px;
+        height: 48px;
+
+    }
+
+    &.toast {
+        display: flex;
+        align-items: center;
+        gap: 0 8px;
+    }
+
+    &.confirm {
+        position: absolute;
+        padding: 32px;
+        top: calc((100% - 206px) / 2);
+
+        .title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+    
+        .confirm-text {
+            white-space: pre-wrap;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+    
+        .confirm-button-section {
+            padding: 0 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .confirm-button {
+            padding: 8px 16px;
+            color: $white;
+            background-color: rgb(50, 50, 50);
+            border: 2px solid $black;
+
+            &.selected {
+                border-color: $white;
+            }
+
+            &.Confirm {
+                color: rgb(0, 255, 0);
+            }
+
+            &.Cancel {
+                color: rgb(255, 0, 0);
+            }
+        }
+    }
+}

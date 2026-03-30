@@ -1,0 +1,170 @@
+@use "../var" as *;
+
+@mixin gaming-setting-text-color {
+    &.White {
+        color: $white;
+    }
+
+    &.Red {
+        color: $text-red;
+    }
+
+    &.Green {
+        color: $text-green;
+    }
+
+    &.Blue {
+        color: $text-blue;
+    }
+
+    &.Yellow {
+        color: $text-yellow;
+    }
+
+    &.Purple {
+        color: $text-purple;
+    }
+
+    &.Light-Blue {
+        color: $text-light-blue
+    }
+
+    &.Orange {
+        color: $text-orange
+    }
+
+    &.Black {
+        color: $text-black
+    }
+}
+
+@mixin multi-monitor-align-color {
+    &.White {
+        &:deep(svg rect, svg path) {
+            fill: $white;
+        }
+
+        svg {
+            rect,
+            path {
+                fill: $white;
+            }
+        }
+    }
+    &.Red {
+        &:deep(svg rect, svg path) {
+            fill: $text-red;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-red;
+            }
+        }
+    }
+    &.Green {
+        &:deep(svg rect, svg path) {
+            fill: $text-green;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-green;
+            }
+        }
+    }
+    &.Blue {
+        &:deep(svg rect, svg path) {
+            fill: $text-blue;
+        }
+        rect,
+        path {
+            fill: $text-blue;
+        }
+    }
+    &.Yellow {
+        &:deep(svg rect, svg path) {
+            fill: $text-yellow;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-yellow;
+            }
+        }
+    }
+    &.Purple {
+        &:deep(svg rect, svg path) {
+            fill: $text-purple;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-purple;
+            }
+        }
+    }
+    &.Light-Blue {
+        &:deep(svg rect, svg path) {
+            fill: $text-light-blue;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-light-blue;
+            }
+        }
+    }
+    &.Orange {
+        &:deep(svg rect, svg path) {
+            fill: $text-orange;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-orange;
+            }
+        }
+    }
+    &.Black {
+        &:deep(svg rect, svg path) {
+            fill: $text-black;
+        }
+        svg {
+            rect,
+            path {
+                fill: $text-black;
+            }
+        }
+    }
+}
+
+@mixin gaming-setting-text-location {
+    &.Top-Left {
+        top: 16px;
+        left: 16px;
+        bottom: initial;
+        right: initial;
+    }
+
+    &.Top-Right {
+        top: 16px;
+        right: 16px;
+        bottom: unset;
+        left: unset;
+    }
+
+    &.Bottom-Left {
+        bottom: 16px;
+        left: 16px;
+        top: initial;
+        right: initial;
+    }
+
+    &.Bottom-Right {
+        bottom: 16px;
+        right: 16px;
+        top: initial;
+        left: initial;
+    }
+}

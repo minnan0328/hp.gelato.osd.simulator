@@ -1,0 +1,12 @@
+{
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "html.format.wrapAttributes": "preserve-aligned",
+    "html.format.wrapLineLength": 150,
+    "path-autocomplete.pathMappings": {
+        "@": "${folder}/src"
+    }
+}
