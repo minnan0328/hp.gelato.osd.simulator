@@ -42,11 +42,11 @@
         <!-- 控制選單按鈕-點擊範圍 -->
         <div class="menu-controller-btn">
             <template v-if="openMonitor && showScreen && !openControllerMenus">
-                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-top', { 'show-guide':  showMonitorStatus}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-bottom', { 'show-guide':  showMonitorStatus}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-left', { 'show-guide':  showMonitorStatus}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-right', { 'show-guide':  showMonitorStatus}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-top', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-bottom', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-left', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-right', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
             </template>
 
             <template v-else v-for="(currentButton, index) in handleControllerButtonList">
@@ -2025,16 +2025,16 @@ function handlerMenuTimeout() {
 
 .menu-controller-btn {
 	position: absolute;
-	bottom: -148px;
-	right: 30px;
+	bottom: -144px;
+	right: -28px;
 
 	.controller-btn,
 	:deep(.controller-btn) {
         position: absolute;
-		width: 46px;
-		height: 46px;
-        bottom: 24px;
-        right: 0px;
+        width: 42px;
+        height: 42px;
+        bottom: -40px;
+        right: 83px;
 
         &:hover,
         &.show-guide {

@@ -39,7 +39,7 @@
                             <div class="menu-buttons-image">
                                 <img src="@/assets/images/menu-buttons.svg" alt="">
                                 <div class="power-guide" v-if="!openMonitor">Power Button</div>
-                                <div class="menu-buttons-guide" v-if="showMonitorStatus">Menu Buttons</div>
+                                <div class="menu-buttons-guide" v-if="showMonitorStatus || true">Menu Buttons</div>
                             </div>
 
                             <div class="language-direction" v-if="enabledLanguageDirection">
@@ -223,7 +223,7 @@ provide<HomeEvent>("homeEvent", {
         &::after {
             position: absolute;
             content: "";
-            width: 30px;
+            width: 54px;
             height: 146px;
             right: -24px;
             bottom: 168px;
@@ -261,13 +261,13 @@ provide<HomeEvent>("homeEvent", {
         }
 
         .menu-buttons-image {
-            width: 202px;
-            height: 95px;
+            width: 112px;
+            height: 148px;
             position: absolute;
-            bottom: -150px;
-            right: -6px;
+            bottom: -204px;
+            right: 20px;
             border: 2px solid $white;
-            border-radius: 10px;
+            border-radius: 12px;
 
             img {
                 width: 100%;
@@ -276,7 +276,7 @@ provide<HomeEvent>("homeEvent", {
             .power-guide {
                 position: absolute;
                 bottom: -36px;
-                right: 14px;
+                right: 7px;
                 white-space: nowrap;
 
                 &::before {
@@ -294,10 +294,9 @@ provide<HomeEvent>("homeEvent", {
 
             .menu-buttons-guide {
                 position: absolute;
-                white-space: nowrap;
-                content: "";
-                bottom: -36px;
-                right: 52px;
+                width: 54px;
+                bottom: 32px;
+                right: -60px;
             }
         }
 

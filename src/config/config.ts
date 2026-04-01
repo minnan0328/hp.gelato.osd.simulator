@@ -1,6 +1,6 @@
 const config = {
     company: "",
-    screenModel: "HyperX OMEN 24 G2",
+    screenModel: "OMEN 27e /24e",
 }
 
 export default config;
