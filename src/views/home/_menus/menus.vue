@@ -145,6 +145,7 @@ import AutoSleepModeNodes from '@/models/class/power/_auto-sleep-mode-nodes';
 import InputNodes from '@/models/class/input/input';
 
 // gaming nodes
+import ResponseRiteNodes from '@/models/class/gaming/_response-rime-nodes';
 import AMDFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
 import RefreshRateNodes from '@/models/class/gaming/_refresh-rate-nodes';
 import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
@@ -208,6 +209,7 @@ const AutoSleepModeNodesEnum = new AutoSleepModeNodes();
 const InputNodesEnum = new InputNodes();
 
 // gaming nodes enum
+const ResponseRiteNodesEnum = new ResponseRiteNodes();
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
 const CrosshairNodesEnum = new CrosshairNodes();
@@ -248,11 +250,13 @@ const menuStore = useMenuStore();
 const refreshRate = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == RefreshRateNodesEnum.key));
 const crosshair = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == CrosshairNodesEnum.key));
 const messageTimers = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == MessageTimersNodesEnum.key));
+const responseRite = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == ResponseRiteNodesEnum.key));
 // images node enum
 const brightness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
 const assignButtons = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == AssignButtonsNodesEnum.key));
 
 // color node enum
+const color = computed(()=> menuStore.$state.color);
 const RGBGainAdjust = computed(()=> menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key));
 
 // management node enum
@@ -435,8 +439,8 @@ function onControllerMouseDown() {
 
     controllerHoldTimer.value = setTimeout(() => {
         controllerHoldTriggered.value = true;
-        menus.value.nodes[6]!.nodes[3].selected = OnNodesEnum.selected;
-        menus.value.nodes[6]!.nodes[3].result = OnNodesEnum.result;
+        accessibility.value.selected = OnNodesEnum.selected;
+        accessibility.value.result = OnNodesEnum.result;
         handlerControllerMenus();
         handlerOpenAllMenu();
     }, 4000);
@@ -1011,7 +1015,6 @@ function handlerNavigation(direction: 'up' | 'down') {
                             || menuState.temporaryStorage && menuState.secondPanel!.mode == ModeType.button && menuState.secondPanel!.key == RGBGainAdjustNodesEnum.key
                         ) {
                             menuState.menuPanel.result = menuState.temporaryStorage.result;
-                            menus.value.nodes[0]!.nodes![0].result = [menuState.menuPanel.result as string];
                             menuState.temporaryStorage = null;
                             setBrightnessValue();
                         }
@@ -1239,12 +1242,12 @@ function handlerRangeValue(step: string) {
             }
 
             if(previousNodes.key == BrightnessNodesEnum.key) {
-                const colorResult = menus.value.nodes[2]!.nodes.find(n => n.result === menus.value.nodes[2]!.result);
+                const colorResult = color.value!.nodes.find((n: Nodes) => n.result === color.value!.result);
                 colorResult.brightness = nodes.result as number;
             }
 
             if(previousNodes.key == RGBGainAdjustNodesEnum.key) {
-                const colorResult = menus.value.nodes[2]!.nodes.find(n => n.selected == menus.value.nodes[2]!.selected);
+                const colorResult = color.value!.nodes.find((n: Nodes) => n.selected == color.value!.selected);
                 colorResult.rgb.r = previousNodes.nodes![0]!.result as number;
                 colorResult.rgb.g = previousNodes.nodes![1]!.result as number;
                 colorResult.rgb.b = previousNodes.nodes![2]!.result as number;
@@ -1587,8 +1590,8 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
                     [SpeedrunTimerNodesEnum.key]: () => {
                         gamingResult.value.messageTimers.start = false;
 
-                        menus.value.nodes[0]!.nodes[2]!.selected = OffNodesEnum.selected;
-                        menus.value.nodes[0]!.nodes[2]!.result = OffNodesEnum.result;
+                        responseRite.value!.selected = OffNodesEnum.selected;
+                        responseRite.value!.result = OffNodesEnum.result;
                         previousNodes.nodes![3]!.disabled = false;
                         previousNodes.nodes![4]!.disabled = false;
                         previousNodes.nodes![5]!.disabled = false;
@@ -1602,8 +1605,8 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
                     [CountdownTimerNodesEnum.key]: () => {
                         gamingResult.value.messageTimers.start = false;
 
-                        menus.value.nodes[0]!.nodes[2]!.selected = OffNodesEnum.selected;
-                        menus.value.nodes[0]!.nodes[2]!.result = OffNodesEnum.result;
+                        responseRite.value!.selected = OffNodesEnum.selected;
+                        responseRite.value!.result = OffNodesEnum.result;
                         previousNodes.nodes![3]!.disabled = false;
                         previousNodes.nodes![4]!.disabled = false;
                         previousNodes.nodes![5]!.disabled = false;
