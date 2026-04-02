@@ -42,7 +42,7 @@
         <!-- 控制選單按鈕-點擊範圍 -->
         <div class="menu-controller-btn">
             <template v-if="openMonitor && showScreen && !openControllerMenus">
-                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus }]" @mousedown="onControllerMouseDown" @mouseup="onControllerMouseUp"></button>
                 <button :class="['controller-btn controller-btn-top', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
                 <button :class="['controller-btn controller-btn-bottom', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
                 <button :class="['controller-btn controller-btn-left', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
@@ -255,6 +255,9 @@ const assignButtons = computed(()=> menuStore.$state.menu.nodes.find(n => n.key 
 // color node enum
 const RGBGainAdjust = computed(()=> menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key));
 
+// management node enum
+const accessibility = computed(()=> menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key));
+
 const homeEvent = inject("homeEvent") as HomeEvent;
 
 const props = defineProps({
@@ -424,6 +427,33 @@ watch(() => props.openMonitor, (newVal, oldVal) => {
 });
 
 // 開啟控制選單
+const controllerHoldTimer = ref<ReturnType<typeof setTimeout> | null>(null);
+const controllerHoldTriggered = ref(false);
+
+function onControllerMouseDown() {
+    controllerHoldTriggered.value = false;
+
+    controllerHoldTimer.value = setTimeout(() => {
+        controllerHoldTriggered.value = true;
+        menus.value.nodes[6]!.nodes[3].selected = OnNodesEnum.selected;
+        menus.value.nodes[6]!.nodes[3].result = OnNodesEnum.result;
+        handlerControllerMenus();
+        handlerOpenAllMenu();
+    }, 4000);
+}
+
+function onControllerMouseUp() {
+    if (controllerHoldTimer.value) {
+        clearTimeout(controllerHoldTimer.value);
+        controllerHoldTimer.value = null;
+    }
+
+    // 短按（未觸發長按）才執行原本的邏輯
+    if (!controllerHoldTriggered.value) {
+        handlerControllerMenus();
+    }
+}
+
 function handlerControllerMenus() {
     if(props.openMonitor && props.showMonitorStatus && props.startUpFinish == false) {
         emit("update:showMonitorStatus", false);
@@ -1493,12 +1523,6 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
             },
             [ColorNodesEnum.key]: () => setBrightnessValue(),
             [VideoLevelNodesEnum.key]: () => restartScreenPreview(),
-            [AccessibilityNodesEnum.key]: () => {
-                menuStore.$state.menu.nodes[0].disabled = previousNodes.result == OnNodesEnum.result;
-                menuStore.$state.menu.nodes[1].disabled = previousNodes.result == OnNodesEnum.result;
-
-                reopenMenu();
-            },
             [RefreshRateNodesEnum.key]: () => {
                 const actions = {
                     [OffNodesEnum.key]: () => {

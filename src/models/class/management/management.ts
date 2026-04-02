@@ -42,10 +42,11 @@ export default class Management extends DefaultNodes implements Nodes {
             ...JSON.parse(JSON.stringify(DiagnosticPatternsNodesEnum)),
             parents: this.key
         },
-        // {
-        //     ...JSON.parse(JSON.stringify(AccessibilityNodesEnum)),
-        //     parents: this.key
-        // },
+        {
+            ...JSON.parse(JSON.stringify(AccessibilityNodesEnum)),
+            parents: this.key,
+            menuItemDisplay: false
+        },
         // 重置
         {
             ...JSON.parse(JSON.stringify(ResetNodesEnum)),
