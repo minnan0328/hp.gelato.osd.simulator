@@ -15,7 +15,6 @@ const AccessibilityNodesEnum = new AccessibilityNodes();
 
 export default class Management extends DefaultNodes implements Nodes {
     key = "Management";
-    size = 6;
     mode = ModeType.button;
     language = {
         German: "Steuerung",
@@ -43,10 +42,10 @@ export default class Management extends DefaultNodes implements Nodes {
             ...JSON.parse(JSON.stringify(DiagnosticPatternsNodesEnum)),
             parents: this.key
         },
-        {
-            ...JSON.parse(JSON.stringify(AccessibilityNodesEnum)),
-            parents: this.key
-        },
+        // {
+        //     ...JSON.parse(JSON.stringify(AccessibilityNodesEnum)),
+        //     parents: this.key
+        // },
         // 重置
         {
             ...JSON.parse(JSON.stringify(ResetNodesEnum)),
@@ -59,5 +58,6 @@ export default class Management extends DefaultNodes implements Nodes {
             parents: this.key,
             mergeGrid: true 
         }
-    ];
+    ]
+    size = this.nodes.length
 };
