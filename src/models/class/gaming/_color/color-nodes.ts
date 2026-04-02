@@ -24,8 +24,8 @@ const BackNodesEnum = new BackNodes();
 
 export default class ColorNodes extends DefaultNodes implements Nodes {
     key = "SettingTextColor";
-    selected = WhileNodesEnum.selected;
-    result = WhileNodesEnum.result;
+    selected = RedNodesEnum.selected;
+    result = RedNodesEnum.result;
     assignItemDisplay = false;
     displayValue = true;
     disabled = true;
