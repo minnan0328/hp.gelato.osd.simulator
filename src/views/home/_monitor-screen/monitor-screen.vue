@@ -11,9 +11,8 @@
     </monitorStatus>
 
     <div :class="['screen', monitorScreenResult.imageScaling]"
-        v-if="showScreen
-            && !monitorScreenResult.diagnosticPatterns.enabled
-            && !gamingResult.multiMonitorAlign.enabled">
+        :style="{backgroundColor: `rgb(${monitorScreenResult.RGB.r}, ${monitorScreenResult.RGB.g}, ${monitorScreenResult.RGB.b})`}"
+        v-if="showScreen && !monitorScreenResult.diagnosticPatterns.enabled && !gamingResult.multiMonitorAlign.enabled">
         <img :src="monitorScreenResult.image" alt="">
 
         <span :class="['setting-info-value',
@@ -95,7 +94,6 @@ import { menuStateResult, monitorScreenResult, gamingResult } from '@/service/mo
 import { toDisplayTimeFormat } from '@/service/service';
 import iconSvg from '@/views/home/_menus/_components/_icon-svg.vue';
 import CrosshairConfigureNodes from '@/models/class/gaming/_crosshair/_configure-nodes';
-
 
 const CrosshairConfigureNodesEnum = new CrosshairConfigureNodes();
 
@@ -180,9 +178,6 @@ onMounted(() => {
 }
 
 .screen {
-    --rgb-r: v-bind("monitorScreenResult.RGB.R");
-    --rgb-g: v-bind("monitorScreenResult.RGB.G");
-    --rgb-b: v-bind("monitorScreenResult.RGB.B");
     position: absolute;
     width: $screen-width;
     height: $screen-height;
@@ -206,13 +201,11 @@ onMounted(() => {
         content: "";
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        background-color: $black;
         width: $screen-width;
         height: $screen-height;
-        background-color: rgb(var(--rgb-r), var(--rgb-g), var(--rgb-b));
+        opacity: v-bind("monitorScreenResult.contrast");
         z-index: 1;
-        mix-blend-mode: multiply;
     }
 
     img {
@@ -221,10 +214,10 @@ onMounted(() => {
         position: absolute;
         bottom: v-bind("monitorScreenResult.imagePosition.y");
         left:  v-bind("monitorScreenResult.imagePosition.x");
+        mix-blend-mode: multiply;
+
         filter: 
-            // hue-rotate(v-bind("monitorScreenResult.RGB"))
             brightness(v-bind("monitorScreenResult.brightness"))
-            contrast(v-bind("monitorScreenResult.contrast"))
             blur(v-bind("monitorScreenResult.sharpness"));
     }
 

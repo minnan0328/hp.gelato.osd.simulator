@@ -1,49 +1,96 @@
 import { useMenuStore } from '@/stores/index';
+// utilities nodes
 import { OnNodes, OffNodes } from '@/models/class/_utilities';
+// color nodes
 import ColorNodes from '@/models/class/color/color';
+import RGBGainAdjust from '@/models/class/color//_RGB-gain-adjust-nodes';
+// input nodes
 import InputNodes from '@/models/class/input/input';
+// gaming nodes
 import MPRTNodes from '@/models/class/gaming/_mprt-nodes';
 import AmdFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
+// image nodes
 import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
+import BrightnessNodes from '@/models/class/image/_brightness-nodes';
+import ContrastNodes from '@/models/class/image/_contrast-nodes';
 
 const menuStore = useMenuStore();
+// utilities nodes
 const OnNodesEnum = new OnNodes();
 const OffNodesEnum = new OffNodes();
+// color nodes
 const ColorNodesEnum = new ColorNodes();
+const RGBGainAdjustNodesEnum = new RGBGainAdjust();
+// input nodes
 const InputNodesEnum = new InputNodes();
+// gaming nodes
 const MPRTNodesEnum = new MPRTNodes();
 const AmdFreeSyncNodesEnum = new AmdFreeSyncNodes();
+// image nodes
 const DynamicContrastNodesEnum = new DynamicContrastNodes();
+const BrightnessNodesEnum = new BrightnessNodes();
+const ContrastNodesEnum = new ContrastNodes();
 
+const brightnessNode = menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key);
+const contrastNode = menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key);
+const RGBGainAdjustNode = menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key);
+const dynamicContrastNode = menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key);
+const MPRTNode = menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key);
+const AMDFreeSyncNode = menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key);
 
 export function setBrightnessValue() {
     menuStore.$state.information.nodes[2].selected = menuStore.$state.color.selected;
     menuStore.$state.information.nodes[2].result = menuStore.$state.color.result;
     const colorResult = menuStore.$state.color.nodes.find(n => n.result == menuStore.$state.color.result);
     
-    menuStore.$state.image.nodes[0].result = colorResult.brightness;
-    menuStore.$state.image.nodes[0].nodes[0].result = colorResult.brightness;
-    menuStore.$state.color.nodes[8].nodes![0].result = colorResult.rgb.r;
-    menuStore.$state.color.nodes[8].nodes![1].result = colorResult.rgb.g;
-    menuStore.$state.color.nodes[8].nodes![2].result = colorResult.rgb.b;
+    brightnessNode.result = colorResult.brightness;
+    brightnessNode.nodes[0].result = colorResult.brightness;
+    brightnessNode.selected = colorResult.brightness;
+    brightnessNode.nodes[0].selected = colorResult.brightness;
 
-    menuStore.$state.image.nodes[0].selected = colorResult.brightness;
-    menuStore.$state.image.nodes[0].nodes[0].selected = colorResult.brightness;
-    menuStore.$state.color.nodes[8].nodes![0].selected = colorResult.rgb.r;
-    menuStore.$state.color.nodes[8].nodes![1].selected = colorResult.rgb.g;
-    menuStore.$state.color.nodes[8].nodes![2].selected = colorResult.rgb.b;
+    contrastNode.result = colorResult.contrast;
+    contrastNode.nodes[0].result = colorResult.contrast;
+    contrastNode.selected = colorResult.contrast;
+    contrastNode.nodes[0].selected = colorResult.contrast;
+
+    RGBGainAdjustNode.nodes![0].result = colorResult.rgb.r;
+    RGBGainAdjustNode.nodes![1].result = colorResult.rgb.g;
+    RGBGainAdjustNode.nodes![2].result = colorResult.rgb.b;
+    RGBGainAdjustNode.nodes![0].selected = colorResult.rgb.r;
+    RGBGainAdjustNode.nodes![1].selected = colorResult.rgb.g;
+    RGBGainAdjustNode.nodes![2].selected = colorResult.rgb.b;
 
     // 當 color 是 HP Enhance+ 時 brightness 的 dynamic contrast 為 disable 並且關閉
     if(menuStore.$state.color.result == menuStore.$state.color.nodes[7].result) {
-        menuStore.$state.image.nodes[2].disabled = true;
-        menuStore.$state.image.nodes[2].result = OffNodesEnum.result;
-        menuStore.$state.image.nodes[2].selected = OffNodesEnum.selected;
+        dynamicContrastNode.disabled = true;
+        dynamicContrastNode.result = OffNodesEnum.result;
+        dynamicContrastNode.selected = OffNodesEnum.selected;
     }
 };
 
+
 export function setDynamicContrastValue() {
-    menuStore.$state.image.nodes[2].result = OffNodesEnum.result;
-    menuStore.$state.image.nodes[2].selected = OffNodesEnum.selected;
+    dynamicContrastNode.result = OffNodesEnum.result;
+    dynamicContrastNode.selected = OffNodesEnum.selected;
+}
+
+export function resetBrightnessContrastValue() {
+    const originalColorNodes = ColorNodesEnum.nodes.find(n => n.result == menuStore.$state.color.result);
+    const colorResult = menuStore.$state.color.nodes.find(n => n.result == menuStore.$state.color.result);
+
+    brightnessNode.result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+
+    contrastNode.selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+
+
+    colorResult.brightness = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    colorResult.contrast = JSON.parse(JSON.stringify(originalColorNodes.contrast));
 }
 
 export function resetColorRGB() {
@@ -59,11 +106,8 @@ export function resetInputValue() {
 }
 
 export function setGamingNodesStatus() {
-    const MPRTNode = menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key);
-    const AMDFreeSyncNode = menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key);
-    const dynamicContrastNode = menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key);
-    
-    if(AMDFreeSyncNode && DynamicContrastNodesEnum && MPRTNode) {
+    if(AMDFreeSyncNode && dynamicContrastNode && MPRTNode) {
+        // 當 AMD FreeSync 或 Dynamic Contrast 為 On 時 MPRT 為 disable，反之則為 enable
         MPRTNode.disabled = (AMDFreeSyncNode.result == OnNodesEnum.result || dynamicContrastNode.result == OnNodesEnum.result) ? true : false;
     }
 }

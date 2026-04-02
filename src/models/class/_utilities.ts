@@ -7,6 +7,7 @@ export class DefaultNodes implements Nodes {
     selected!: number | string | string[] | boolean | object |null;
     result!: number | string | string[] | boolean | object | null;
     brightness = 100; // 亮度
+    contrast = 100; // 對比度
     rgb = { r: 255, g: 255, b: 255 }; // RGB 顏色值
     optionColor = ""; // HEX 顏色值
     assignItemDisplay = true; // 顯示在快捷 menu 上面

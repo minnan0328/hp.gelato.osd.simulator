@@ -1,14 +1,24 @@
 import { ref, computed, reactive } from 'vue';
 import type { Nodes } from '@/types';
 import { useMenuStore } from '@/stores/index';
-import { OnNodes, OffNodes, TopNodes, MediumNodes, BottomNodes, LowNodes, HighNodes } from '@/models/class/_utilities';
+// service functions
+import { removeAndLowercase, minutesTolSeconds } from '@/service/service';
+// dialog function
+import dialog from '@/service/dialog/dialog';
+// utilities nodes
+import { OnNodes, OffNodes } from '@/models/class/_utilities';
+// gaming nodes
 import SpeedrunTimerNodes from '@/models/class/gaming/_message-timers/_speedrun-timer-nodes';
 import CountdownTimerNodes from '@/models/class/gaming/_message-timers/_countdown-timer-nodes';
 import MessageNodes from '@/models/class/gaming/_message-timers/_message-nodes';
+// image nodes
+import BrightnessNodes from '@/models/class/image/_brightness-nodes';
+import ContrastNodes from '@/models/class/image/_contrast-nodes';
+// color nodes
+import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
+// input nodes
 import DisplayProtModeNodes from '@/models/class/input/_ display-port-mode-nodes';
-import { removeAndLowercase, minutesTolSeconds } from '@/service/service';
-import dialog from '@/service/dialog/dialog';
-
+// images and icons
 import screenOff from '@/assets/images/screen-off.jpg';
 import iconClock from '@/assets/icons/icon-clock.svg';
 
@@ -16,14 +26,24 @@ const menuStore = useMenuStore();
 const OnNodesEnum = new OnNodes();
 const OffNodesEnum = new OffNodes();
 
+// gaming nodes
 const SpeedrunTimerNodesEnum = new SpeedrunTimerNodes();
 const CountdownTimerNodesEnum = new CountdownTimerNodes();
 const MessageNodesEnum = new MessageNodes();
+// image nodes
+const BrightnessNodesEnum = new BrightnessNodes();
+const ContrastNodesEnum = new ContrastNodes();
+// color nodes
+const RGBGainAdjustNodesEnum = new RGBGainAdjustNodes();
+// input nodes
 const DisplayPortModeNodesEnum = new DisplayProtModeNodes();
 
 const gaming = computed(()=> menuStore.$state.gaming);
 const color = computed(()=> menuStore.$state.color);
+const RGBGainAdjust = computed(()=> menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key));
 const image = computed(()=> menuStore.$state.image);
+const brightness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
+const contrast = computed(()=> menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key));
 const input = computed(()=> menuStore.$state.input);
 const power = computed(()=> menuStore.$state.power);
 const menu = computed(()=> menuStore.$state.menu);
@@ -75,14 +95,10 @@ export const monitorScreenResult = computed(() => {
             monitorHeight: `${monitorHeight}px`
         }, 
         // 取得亮度值 Brightness
-        brightness: `${image.value.nodes[0].nodes[0].result}%`,
+        brightness: brightness.value.nodes[0].result == 100 ? (brightness.value.nodes[0].result / 100) : (((brightness.value.nodes[0].result / 2 ) + 30) / 100),
         // 取得對比值 Contrast
-        contrast: `${image.value.nodes[1].nodes[0].result}%`,
-        RGB: {
-            R: (color.value.nodes[8].nodes) ? color.value.nodes[8].nodes[0].result as number : 255,
-            G:(color.value.nodes[8].nodes) ? color.value.nodes[8].nodes[1].result as number : 255,
-            B: (color.value.nodes[8].nodes) ? color.value.nodes[8].nodes[2].result as number : 255
-        },
+        contrast: contrast.value.nodes[0].result == 100 ? (1 - (contrast.value.nodes[0].result / 100)) : ((70 / 100) - ((contrast.value.nodes[0].result / 2 ) + 30) / 100),
+        RGB: toImageColor.value,
         // 取得銳利度
         sharpness: getSharpness.value,
         // 取得診斷模式顏色
@@ -412,6 +428,25 @@ const getSharpness = computed(() => {
     } else {
         return "0.4px"
     }
+});
+
+const toImageColor = computed(() => {
+    // 自訂 RGB，RGB 轉換
+    let RGB: {r: number, g: number, b: number} = {r: 0, g: 0, b: 0};
+
+    RGB = {
+        r: RGBGainAdjust.value.nodes[0].result == 255
+            ? RGBGainAdjust.value.nodes[0].result 
+            : (RGBGainAdjust.value.nodes[0].result / 2) + 127.5 as number,
+        g: RGBGainAdjust.value.nodes[1].result == 255
+            ? RGBGainAdjust.value.nodes[1].result
+            : (RGBGainAdjust.value.nodes[1].result / 2) + 127.5 as number,
+        b: RGBGainAdjust.value.nodes[2].result == 255
+            ? RGBGainAdjust.value.nodes[2].result
+            : (RGBGainAdjust.value.nodes[2].result / 2) + 127.5 as number
+    }
+
+    return RGB;
 });
 
 // 取出括號中的數字，選單旋轉使用

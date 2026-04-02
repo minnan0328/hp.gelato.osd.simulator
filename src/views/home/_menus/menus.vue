@@ -118,37 +118,45 @@ import iconFps from '@/assets/icons/icon-fps.svg';
 
 import PowerConfirmChangeNodes from '@/models/class/power/message/confirm-change';
 
+// image nodes
+import ImageNodes from '@/models/class/image/image';
 import BrightnessNodes from '@/models/class/image/_brightness-nodes';
 import ContrastNodes from '@/models/class/image/_contrast-nodes';
 import VideoLevelNodes from '@/models/class/image/_video-level-nodes';
-import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 
+// color nodes
 import ColorNodes from '@/models/class/color/color';
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 
+// menu nodes
 import MenuPositionNodes from '@/models/class/menu/_menu-position-nodes';
 import LanguageNodes from '@/models/class/menu/_language-nodes';
 
+// management nodes
 import FactoryResetNodes from '@/models/class/management/_factory-reset-nodes';
 import AccessibilityNodes from '@/models/class/management/_accessibility-nodes';
 import DiagnosticPatternsNodes from '@/models/class/management/_diagnostic-patterns-nodes';
 
+// power nodes
 import AutoSleepModeNodes from '@/models/class/power/_auto-sleep-mode-nodes';
 
+// input nodes
 import InputNodes from '@/models/class/input/input';
 
+// gaming nodes
 import AMDFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
 import RefreshRateNodes from '@/models/class/gaming/_refresh-rate-nodes';
 import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
 import CrosshairLocationNodes from '@/models/class/gaming/_crosshair/_location-nodes';
+import MultiMonitorAlignNodes from '@/models/class/gaming/_multi-monitor-align-nodes';
 
+// message timers nodes
 import MessageTimersNodes from '@/models/class/gaming/_message-timers/message-timers-nodes';
 import SpeedrunTimerNodes from '@/models/class/gaming/_message-timers/_speedrun-timer-nodes';
 import CountdownTimerNodes from '@/models/class/gaming/_message-timers/_countdown-timer-nodes';
 import StartStopNodes from '@/models/class/gaming/_message-timers/_start-stop-nodes';
 import ResetTimerNodes from '@/models/class/gaming/_message-timers/_reset-timer-nodes';
 
-import MultiMonitorAlignNodes from '@/models/class/gaming/_multi-monitor-align-nodes';
 
 import {
     DefaultNodes, BackNodes, ResetNodes, ExitNodes,
@@ -163,41 +171,53 @@ import {
     AssignEmptyNodes
 } from '@/models/class/menu/_assign-buttons/_utilities';
 
-import { setBrightnessValue, setDynamicContrastValue, resetColorRGB, resetInputValue, setGamingNodesStatus  } from '@/service/set-default-value';
+import { 
+    setBrightnessValue, setDynamicContrastValue,
+    resetBrightnessContrastValue, resetColorRGB, 
+    resetInputValue, setGamingNodesStatus 
+} from '@/service/set-default-value';
 
 const MenusDefaultEnum = new MenusDefaultModel();
 
+// image nodes enum
+const ImageNodesEnum = new ImageNodes();
 const BrightnessNodesEnum = new BrightnessNodes();
 const ContrastNodesEnum = new ContrastNodes();
 const VideoLevelNodesEnum = new VideoLevelNodes();
 
+// color nodes enum
 const ColorNodesEnum = new ColorNodes();
 const RGBGainAdjustNodesEnum = new RGBGainAdjustNodes();
 
+// menu nodes enum
 const MenuPositionNodesEnum = new MenuPositionNodes();
 const LanguageNodesEnum = new LanguageNodes();
 
+// management nodes enum
 const FactoryResetNodesEnum = new FactoryResetNodes();
 const AccessibilityNodesEnum = new AccessibilityNodes();
 const DiagnosticPatternsNodesEnum = new DiagnosticPatternsNodes();
 
+// power nodes enum
 const AutoSleepModeNodesEnum = new AutoSleepModeNodes();
 
+// input nodes enum
 const InputNodesEnum = new InputNodes();
 
+// gaming nodes enum
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
 const CrosshairNodesEnum = new CrosshairNodes();
 const CrosshairLocationNodesEnum = new CrosshairLocationNodes();
-const DynamicContrastNodesEnum = new DynamicContrastNodes();
+const MultiMonitorAlignNodesEnum = new MultiMonitorAlignNodes();
 
+// message timers nodes enum
 const MessageTimersNodesEnum = new MessageTimersNodes();
 const SpeedrunTimerNodesEnum = new SpeedrunTimerNodes();
 const CountdownTimerNodesEnum = new CountdownTimerNodes();
 const StartStopNodesEnum = new StartStopNodes();
 const ResetTimerNodesEnum = new ResetTimerNodes();
 
-const MultiMonitorAlignNodesEnum = new MultiMonitorAlignNodes();
 
 const DefaultNodesEnum = new DefaultNodes();
 const BackNodesEnum = new BackNodes();
@@ -1696,9 +1716,13 @@ function handleResetAction() {
         return;
     }
 
+    if(menuState.menuPanel?.key == ImageNodesEnum.key) {
+        resetBrightnessContrastValue();
+        return;
+    };
+
     if(menuState.menuPanel?.key == ColorNodesEnum.key) {
         resetColorRGB();
-        setBrightnessValue();
         return
     };
 
