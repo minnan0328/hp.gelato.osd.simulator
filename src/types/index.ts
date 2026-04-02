@@ -58,6 +58,7 @@ export interface Nodes {
     timeUnit: string | null;
     useIcon: boolean;
     svgIcon: string | null;
+    unit: Language | null;
     nodes: Nodes[] | null;
 };
 

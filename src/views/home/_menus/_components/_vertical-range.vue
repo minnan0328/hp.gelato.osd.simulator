@@ -1,5 +1,5 @@
 <template>
-    <div class="range setting-item" v-if="isEnableNode(currentNode) && currentNode.mode == ModeType.verticalRange">
+    <div class="range" v-if="isEnableNode(currentNode) && currentNode.mode == ModeType.verticalRange">
         <div :class="['vertical-range', {
                     selected: nodes && nodes?.key == currentNode.key,
                     color: isColor,
@@ -15,14 +15,13 @@
                 <span v-if="currentNode.rangeMaxIcon" v-text="currentNode.rangeMax"></span>
             </div>
 
-            <div :class="['range-graduate item', { selected: nodes && nodes?.key == currentNode.key, 'merge-grid': isColor }]">
-                <div :class="['graduate', currentNode.key, { max: currentNode.selected == currentNode.rangeMax }]">
-                </div>
+            <div :class="['range-graduate', { selected: nodes && nodes?.key == currentNode.key, 'merge-grid': isColor }]">
+                <div :class="['graduate', currentNode.key, { max: currentNode.selected == currentNode.rangeMax }]"></div>
             </div>
 
             <div class="range-text" v-if="!isColor" >
-                <span v-text="currentNode.selected"></span>
-                <span v-if="currentNode.unitText" v-text="toLanguageText(currentNode.unitText)"></span>
+                <span class="s" v-text="currentNode.selected"></span>
+                <span v-if="currentNode.unit" v-text="toLanguageText(currentNode.unit)"></span>
             </div>
 
             <div class="range-max-value">
@@ -44,8 +43,7 @@ import type { Nodes } from '@/types';
 import { ModeType } from '@/types';
 import { isEnableNode ,toLanguageText, getIconSrc } from '@/service/service';
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
-
-const rgbGainAdjustNodesEnum = new RGBGainAdjustNodes();
+const RGBGainAdjustNodesEnum = new RGBGainAdjustNodes();
 
 const props = defineProps({
     currentNode: {
@@ -59,7 +57,7 @@ const props = defineProps({
     }
 });
 
-const isColor = computed(() => props.nodes && props.nodes?.key == rgbGainAdjustNodesEnum.key);
+const isColor = computed(() => (props.nodes && props.nodes?.parents == RGBGainAdjustNodesEnum.key) || (props.currentNode && props.currentNode?.parents == RGBGainAdjustNodesEnum.key));
 
 const currentValue = computed(() => {
     let showValue = convertRange(props.currentNode.selected as number, props.currentNode.rangeMin as number, props.currentNode.rangeMax as number);
@@ -72,7 +70,7 @@ function convertRange(value: number, rangeMin: number, rangeMax: number) {
 
 </script>
 <style lang="scss" scoped>
-
+@use '@/styles/_var' as *;
 
 .range {
     width: 100%;
@@ -141,6 +139,12 @@ function convertRange(value: number, rangeMin: number, rangeMax: number) {
             align-items: center;
             border: 1px solid transparent;
             position: relative;
+
+            &.selected:not(.disabled) {
+                background-color: $black;
+                border: 1px solid $blue;
+                color: $white;
+            }
 
             .graduate {
                 width: 4px;
