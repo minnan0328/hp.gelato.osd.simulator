@@ -8,10 +8,10 @@ const BackNodesEnum = new BackNodes();
 
 export default class ResponseTimeNodes extends DefaultNodes implements Nodes {
     key = "ResponseTime";
-    selected = "Level 2 (Fast)";
-    result = "Level 2 (Fast)";
+    selected = "Level 1";
+    result = "Level 1";
     displayValue = true;
-    size = 5;
+    size = 4;
     mode = ModeType.button;
     language = {
         German: "Reaktionszeit",
@@ -92,44 +92,23 @@ export default class ResponseTimeNodes extends DefaultNodes implements Nodes {
         },
         {
             ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
-            key: "Level4",
-            selected: "Level 4",
-            result: "Level 4",
+            key: "Level4(Fastest)",
+            selected: "Level 4 (Fastest)",
+            result: "Level 4 (Fastest)",
             parents: this.key,
             mode: ModeType.radio,
             language: {
-                German: "Ebene 4",
-                SimplifiedChinese: "4 级",
-                TraditionalChinese: "4 級",
-                English: "Level 4",
-                Español: "Nivel 4",
-                French: "Niveau 4",
-                Italian: "Livello 4",
-                Japanese: "レベル 4",
-                Nederlands: "Niveau 4",
-                BrazilianPortuguese: "Nível 4",
-                Russian: "Уровень 4"
-            }
-        },
-        {
-            ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
-            key: "Level5(Fastest)",
-            selected: "Level 5 (Fastest)",
-            result: "Level 5 (Fastest)",
-            parents: this.key,
-            mode: ModeType.radio,
-            language: {
-                German: "Ebene 5 (Am schnellsten)",
-                SimplifiedChinese: "5 级（最快）",
-                TraditionalChinese: "5 級（最快）",
-                English: "Level 5 (Fastest)",
-                Español: "Nivel 5 (El más rápido)",
-                French: "Niveau 5 (Le plus rapide)",
-                Italian: "Livello 5 (Il più veloce)",
+                German: "Ebene 4 (Am schnellsten)",
+                SimplifiedChinese: "4 级（最快）",
+                TraditionalChinese: "4 級（最快）",
+                English: "Level 4 (Fastest)",
+                Español: "Nivel 4 (El más rápido)",
+                French: "Niveau 4 (Le plus rapide)",
+                Italian: "Livello 4 (Il più veloce)",
                 Japanese: "レベル 4（最速）",
-                Nederlands: "Niveau 5 (Snelste)",
-                BrazilianPortuguese: "Nível 5 (O mais rápido)",
-                Russian: "Уровень 5 (самый быстрый)"
+                Nederlands: "Niveau 4 (Snelste)",
+                BrazilianPortuguese: "Nível 4 (O mais rápido)",
+                Russian: "Уровень 4 (самый быстрый)"
             }
         },
         // 上一步

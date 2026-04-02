@@ -42,11 +42,11 @@
         <!-- 控制選單按鈕-點擊範圍 -->
         <div class="menu-controller-btn">
             <template v-if="openMonitor && showScreen && !openControllerMenus">
-                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-top', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-bottom', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-left', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
-                <button :class="['controller-btn controller-btn-right', { 'show-guide':  showMonitorStatus || true}]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-center', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-top', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-bottom', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-left', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
+                <button :class="['controller-btn controller-btn-right', { 'show-guide':  showMonitorStatus }]" @click="handlerControllerMenus"></button>
             </template>
 
             <template v-else v-for="(currentButton, index) in handleControllerButtonList">
@@ -94,7 +94,6 @@ import settingSection from './_setting-section.vue';
 import assignMenu from './_assign-menu.vue';
 import confirm from '@/views/home/_confirm/confirm.vue';
 import menuControllerItem from './_menu-controller-item.vue';
-import iconSvg from './_components/_icon-svg.vue';
 // svg
 import iconAllMenu from '@/assets/icons/icon-menu.svg';
 import iconBrightness from '@/assets/icons/icon-brightness.svg';
@@ -122,6 +121,7 @@ import PowerConfirmChangeNodes from '@/models/class/power/message/confirm-change
 import BrightnessNodes from '@/models/class/image/_brightness-nodes';
 import ContrastNodes from '@/models/class/image/_contrast-nodes';
 import VideoLevelNodes from '@/models/class/image/_video-level-nodes';
+import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 
 import ColorNodes from '@/models/class/color/color';
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
@@ -163,7 +163,7 @@ import {
     AssignEmptyNodes
 } from '@/models/class/menu/_assign-buttons/_utilities';
 
-import { setBrightnessValue, setDynamicContrastValue, resetColorRGB, resetInputValue } from '@/service/set-default-value';
+import { setBrightnessValue, setDynamicContrastValue, resetColorRGB, resetInputValue, setGamingNodesStatus  } from '@/service/set-default-value';
 
 const MenusDefaultEnum = new MenusDefaultModel();
 
@@ -189,6 +189,7 @@ const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
 const CrosshairNodesEnum = new CrosshairNodes();
 const CrosshairLocationNodesEnum = new CrosshairLocationNodes();
+const DynamicContrastNodesEnum = new DynamicContrastNodes();
 
 const MessageTimersNodesEnum = new MessageTimersNodes();
 const SpeedrunTimerNodesEnum = new SpeedrunTimerNodes();
@@ -346,17 +347,17 @@ const assignMenus = computed(() => {
         [AssignMessageTimersNodesEnum.key]: {
             key: AssignMessageTimersNodesEnum.key,
             icon: iconClock,
-            node: menuStore.$state.gaming.nodes[4]
+            node: menuStore.$state.gaming.nodes[5]
         },
         [AssignRefreshRateNodesEnum.key]: {
             key: AssignRefreshRateNodesEnum.key,
             icon: iconFps,
-            node: menuStore.$state.gaming.nodes[2]
+            node: menuStore.$state.gaming.nodes[3]
         },
         [AssignCrosshairNodesEnum.key]: {
             key: AssignCrosshairNodesEnum.key,
             icon: iconCrosshair,
-            node: menuStore.$state.gaming.nodes[3]
+            node: menuStore.$state.gaming.nodes[4]
         },
         [AssignEmptyNodesEnum.key]: {
             key: AssignEmptyNodesEnum.key,
@@ -1621,12 +1622,13 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
                     actions[nodes.key]!();
                     return;
                 }
-            },
+            }
         };
 
         // 當為 previousNodes.key 時，執行動作
         if (previousNodes.key in keyHandlers) {
             keyHandlers[previousNodes.key]!();
+            setGamingNodesStatus();
         }
 
         if(nodes.livePreview) {

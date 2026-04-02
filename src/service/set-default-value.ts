@@ -1,12 +1,20 @@
 import { useMenuStore } from '@/stores/index';
-import { OffNodes } from '@/models/class/_utilities';
+import { OnNodes, OffNodes } from '@/models/class/_utilities';
 import ColorNodes from '@/models/class/color/color';
 import InputNodes from '@/models/class/input/input';
+import MPRTNodes from '@/models/class/gaming/_mprt-nodes';
+import AmdFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
+import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 
 const menuStore = useMenuStore();
+const OnNodesEnum = new OnNodes();
 const OffNodesEnum = new OffNodes();
 const ColorNodesEnum = new ColorNodes();
 const InputNodesEnum = new InputNodes();
+const MPRTNodesEnum = new MPRTNodes();
+const AmdFreeSyncNodesEnum = new AmdFreeSyncNodes();
+const DynamicContrastNodesEnum = new DynamicContrastNodes();
+
 
 export function setBrightnessValue() {
     menuStore.$state.information.nodes[2].selected = menuStore.$state.color.selected;
@@ -33,7 +41,6 @@ export function setBrightnessValue() {
     }
 };
 
-
 export function setDynamicContrastValue() {
     menuStore.$state.image.nodes[2].result = OffNodesEnum.result;
     menuStore.$state.image.nodes[2].selected = OffNodesEnum.selected;
@@ -49,4 +56,14 @@ export function resetColorRGB() {
 
 export function resetInputValue() {
     menuStore.$state.input.nodes = JSON.parse(JSON.stringify(InputNodesEnum.nodes));
-};
+}
+
+export function setGamingNodesStatus() {
+    const MPRTNode = menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key);
+    const AMDFreeSyncNode = menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key);
+    const dynamicContrastNode = menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key);
+    
+    if(AMDFreeSyncNode && DynamicContrastNodesEnum && MPRTNode) {
+        MPRTNode.disabled = (AMDFreeSyncNode.result == OnNodesEnum.result || dynamicContrastNode.result == OnNodesEnum.result) ? true : false;
+    }
+}

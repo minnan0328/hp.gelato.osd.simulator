@@ -7,6 +7,7 @@ import RefreshRateNodes from './_refresh-rate-nodes';
 import CrosshairNodes from './_crosshair/crosshair-nodes';
 import MessageTimersNodes from './_message-timers/message-timers-nodes';
 import MultiMonitorAlignNodes from './_multi-monitor-align-nodes';
+import MprtNodes from './_mprt-nodes';
 
 const ResetNodesEnum = new ResetNodes(); 
 const BackNodesEnum = new BackNodes();
@@ -16,13 +17,13 @@ const RefreshRateNodesEnum = new RefreshRateNodes();
 const CrosshairNodesEnum = new CrosshairNodes();
 const MessageTimersNodesEnum = new MessageTimersNodes();
 const MultiMonitorAlignNodesEnum = new MultiMonitorAlignNodes();
-
+const MprtNodesEnum = new MprtNodes();
 export default class Gaming extends DefaultNodes implements Nodes {
     key = "Gaming";
     selected = null;
     result = null;
     displayValue = true;
-    size = 8;
+    size = 9;
     mode = ModeType.button;
     language = {
         German: "Spiele",
@@ -40,6 +41,10 @@ export default class Gaming extends DefaultNodes implements Nodes {
     nodes = [
         {
             ...JSON.parse(JSON.stringify(AndFreeSyncNodeEnum)),
+            parents: this.key
+        },
+        {
+            ...JSON.parse(JSON.stringify(MprtNodesEnum)),
             parents: this.key
         },
         {

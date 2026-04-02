@@ -5,30 +5,22 @@ import { OnNodes, OffNodes, TopNodes, MediumNodes, BottomNodes, LowNodes, HighNo
 import SpeedrunTimerNodes from '@/models/class/gaming/_message-timers/_speedrun-timer-nodes';
 import CountdownTimerNodes from '@/models/class/gaming/_message-timers/_countdown-timer-nodes';
 import MessageNodes from '@/models/class/gaming/_message-timers/_message-nodes';
+import DisplayProtModeNodes from '@/models/class/input/_ display-port-mode-nodes';
 import { removeAndLowercase, minutesTolSeconds } from '@/service/service';
 import dialog from '@/service/dialog/dialog';
 
 import screenOff from '@/assets/images/screen-off.jpg';
-import screenLow from '@/assets/images/screen-low.jpg';
-import screenMedium from '@/assets/images/screen-medium.jpg';
-import screenHigh from '@/assets/images/screen-high.jpg';
-
 import iconClock from '@/assets/icons/icon-clock.svg';
 
 const menuStore = useMenuStore();
 const OnNodesEnum = new OnNodes();
 const OffNodesEnum = new OffNodes();
-const TopNodesEnum = new TopNodes();
-const BottomNodesEnum = new BottomNodes();
-const LowNodesEnum = new LowNodes();
-const MediumNodesEnum = new MediumNodes();
-const HighNodesEnum = new HighNodes();
 
 const SpeedrunTimerNodesEnum = new SpeedrunTimerNodes();
 const CountdownTimerNodesEnum = new CountdownTimerNodes();
 const MessageNodesEnum = new MessageNodes();
+const DisplayPortModeNodesEnum = new DisplayProtModeNodes();
 
-const brightness = computed(()=> menuStore.$state.image);
 const gaming = computed(()=> menuStore.$state.gaming);
 const color = computed(()=> menuStore.$state.color);
 const image = computed(()=> menuStore.$state.image);
@@ -62,7 +54,7 @@ const DiagnosticPatternsEnum = reactive({
 const MessageTimersEnum = reactive({
     timer: {
         [SpeedrunTimerNodesEnum.result]: 0,
-        [CountdownTimerNodesEnum.result]: minutesTolSeconds(gaming.value.nodes[4].nodes![2].nodes![0].result as number)
+        [CountdownTimerNodesEnum.result]: minutesTolSeconds(gaming.value.nodes[5].nodes![2].nodes![0].result as number)
     },
     start: false,
     intervalId: null as number | null
@@ -289,34 +281,43 @@ export const menuStateResult = computed(() => {
 // 取得遊戲模式
 export const gamingResult = computed(() => {
     return {
+        // 取得 AMD FreeSync 狀態
+        amdFreeSync: {
+            key: gaming.value.nodes[0].key,
+            status: gaming.value.nodes[0].result == OnNodesEnum.result
+                ? input.value.nodes.find(n => n.key == DisplayPortModeNodesEnum.key).result === "DisplayPort 1.2"
+                    ? "AMD FreeSync"
+                    : "Normal"
+                : "Off",
+        },
         // 當前更新率
         refreshRate: {
-            key: gaming.value.nodes[2].key,
-            enabled: gaming.value.nodes[2].result == OnNodesEnum.result,
-            color: gaming.value.nodes[2].nodes[2].result,
-            location: gaming.value.nodes[2].nodes[3].result,
+            key: gaming.value.nodes[3].key,
+            enabled: gaming.value.nodes[3].result == OnNodesEnum.result,
+            color: gaming.value.nodes[3].nodes[2].result,
+            location: gaming.value.nodes[3].nodes[3].result,
             rate: 120
         },
         // 取得訊息顯示時間
         messageTimers: {
-            key: gaming.value.nodes[4].key,
-            enabled: [gaming.value.nodes[4].nodes[1].result, gaming.value.nodes[4].nodes[2].result].includes(gaming.value.nodes[4].result as string),
+            key: gaming.value.nodes[5].key,
+            enabled: [gaming.value.nodes[5].nodes[1].result, gaming.value.nodes[5].nodes[2].result].includes(gaming.value.nodes[5].result as string),
             get start() {
                 return MessageTimersEnum.start;
             },
             set start(value: boolean) {
                 MessageTimersEnum.start = value;
             },
-            result: gaming.value.nodes[4].result,
+            result: gaming.value.nodes[5].result,
             get timer() {
                 return MessageTimersEnum.timer;
             },
             set timer(value: any) {
                 MessageTimersEnum.timer = value;
             },
-            color: gaming.value.nodes[4].nodes[6].result,
-            location: gaming.value.nodes[4].nodes[7].result,
-            message: gaming.value.nodes[4].nodes![5].nodes!.find((n: Nodes) => n.result == gaming.value.nodes[4].nodes![5].result),
+            color: gaming.value.nodes[5].nodes[6].result,
+            location: gaming.value.nodes[5].nodes[7].result,
+            message: gaming.value.nodes[5].nodes![5].nodes!.find((n: Nodes) => n.result == gaming.value.nodes[5].nodes![5].result),
             clearInterval: function() {
                 if (MessageTimersEnum.intervalId !== null) {
                     clearInterval(MessageTimersEnum.intervalId);
@@ -353,21 +354,21 @@ export const gamingResult = computed(() => {
                 this.start = false;
                 this.timer = reactive({
                     [SpeedrunTimerNodesEnum.result]: 0,
-                    [CountdownTimerNodesEnum.result]: minutesTolSeconds(gaming.value.nodes[4].nodes![2].nodes![0].result as number)
+                    [CountdownTimerNodesEnum.result]: minutesTolSeconds(gaming.value.nodes[5].nodes![2].nodes![0].result as number)
                 });
             }
         },
         multiMonitorAlign: {
-            enabled: gaming.value.nodes[5].result == OnNodesEnum.selected,
-            color: gaming.value.nodes[5].nodes![2].result,
+            enabled: gaming.value.nodes[6].result == OnNodesEnum.selected,
+            color: gaming.value.nodes[6].nodes![2].result,
         },
         crosshairLocation: {
-            enabled: gaming.value.nodes[3].result == OnNodesEnum.selected,
-            result: gaming.value.nodes[3].nodes[2].result,
-            color: gaming.value.nodes[3].nodes![3].result,
+            enabled: gaming.value.nodes[4].result == OnNodesEnum.selected,
+            result: gaming.value.nodes[4].nodes[2].result,
+            color: gaming.value.nodes[4].nodes![3].result,
             position: {
-                x: `${gaming.value.nodes[3].nodes![4].result.x}px`,
-                y: `${gaming.value.nodes[3].nodes![4].result.y}px`
+                x: `${gaming.value.nodes[4].nodes![4].result.x}px`,
+                y: `${gaming.value.nodes[4].nodes![4].result.y}px`
             },
             get start() {
                 return CrosshairEnum.start;

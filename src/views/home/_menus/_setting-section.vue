@@ -42,7 +42,7 @@
 
                         <!-- 設定狀態 -->
                         <div class="item state-item" v-if="secondNodes.displayState">
-                            <span class="state" >state：{{toDisplayValueLanguageText(secondNodes)}}</span>
+                            <span class="state">Status: {{toDisplayValueLanguageText(secondNodes)}}</span>
                         </div>
                         <!-- 設定狀態 -->
 
@@ -100,6 +100,12 @@
                     </span>
                 </div>
 
+                <div class="setting-item unset-grid" v-if="secondarySectionNodes.key == gamingResult.amdFreeSync.key">
+                    <div class="item merge-grid">
+                        <span>Status：{{ gamingResult.amdFreeSync.status }}</span>
+                    </div>
+                </div>
+
                 <template v-for="(thirdNodes, thirdNodesIdx) in secondarySectionNodes.nodes">
                     <div :class="['setting-item unset-grid', thirdNodes.key]"
                         v-if="isEnableNode(thirdNodes) && thirdNodes.menuItemDisplay
@@ -136,7 +142,7 @@
 
                         <!-- 設定狀態 -->
                         <div class="item state-item" v-if="thirdNodes.displayState">
-                            <span class="state" >status：{{toDisplayValueLanguageText(thirdNodes)}}</span>
+                            <span class="state">Status：{{toDisplayValueLanguageText(thirdNodes)}}</span>
                         </div>
                         <!-- 設定狀態 -->
 

@@ -4,8 +4,8 @@ import { DefaultNodes } from '../../_utilities';
 
 export default class RedNodes extends DefaultNodes implements Nodes {
     key = "Red";
-    selected = "Red";
-    result = "Red";
+    selected = "HyperX Red";
+    result = "HyperX Red";
     optionColor = "rgb(255, 0, 0)";
     livePreview = true;
     disabled = true;
@@ -14,13 +14,13 @@ export default class RedNodes extends DefaultNodes implements Nodes {
         German: "Rot",
         SimplifiedChinese: "紅色",
         TraditionalChinese: "紅色",
-        English: "Red",
-        Español: "Rojo",
-        French: "Rouge",
-        Italian: "Rosso",
-        Japanese: "赤",
-        Nederlands: "Rood",
-        BrazilianPortuguese: "Vermelho",
-        Russian: "Красный"
+        English: "HyperX Red",
+        Español: "HyperX Rojo",
+        French: "HyperX Rouge",
+        Italian: "HyperX Rosso",
+        Japanese: "HyperX 赤",
+        Nederlands: "HyperX Rood",
+        BrazilianPortuguese: "HyperX Vermelho",
+        Russian: "HyperX Красный"
     };
 }
