@@ -6,7 +6,6 @@
     </Transition>
 
     <monitorStatus v-if="showMonitorStatus" v-model:show="menuStateResult.monitorStatus.show"
-        v-model:position="(menuStateResult.monitorStatus.nodes.result as string)"
         :showMonitorStatus="showMonitorStatus">
     </monitorStatus>
 
@@ -188,7 +187,7 @@ onMounted(() => {
     &.FilltoAspectRatio {
         max-width: 682px;
         height: $screen-height;
-        margin: 0 50px;
+        margin: 0 calc((#{$screen-width} - 682px) / 2);
 
         &::before {
             width: 682px;

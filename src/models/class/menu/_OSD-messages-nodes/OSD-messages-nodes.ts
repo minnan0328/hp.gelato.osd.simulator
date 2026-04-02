@@ -3,16 +3,14 @@
 import type { Nodes } from "@/types";
 import { ModeType } from "@/types";
 import { DefaultNodes, BackNodes } from '../../_utilities';
-import MonitorStatusNodes from './_monitor-status-nodes';
 
 const DefaultNodesEnum = new DefaultNodes();
 const BackNodesEnum = new BackNodes();
-const MonitorStatusNodesEnum = new MonitorStatusNodes();
 
 export default class OSDMessagesNodes extends DefaultNodes implements Nodes {
     key = "OSDMessages";
-    selected = ["Power-On Logo", "No Input Signal Warning", "Confirm Change Message"];
-    result = ["Power-On Logo", "No Input Signal Warning", "Confirm Change Message"];
+    selected = ["Power-On Logo", "No Input Signal Warning", "Confirm Change Message", "Monitor Status"];
+    result = this.selected;
     size = 5;
     mode = ModeType.button;
     language = {
@@ -95,7 +93,25 @@ export default class OSDMessagesNodes extends DefaultNodes implements Nodes {
             }
         },
         {
-            ...JSON.parse(JSON.stringify(MonitorStatusNodesEnum)),
+            ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
+            key: "MonitorStatus",
+            selected: "Monitor Status",
+            result: "Monitor Status",
+            parents: this.key,
+            mode: ModeType.checkBox,
+            language: {
+                German: "Monitorstatus",
+                SimplifiedChinese: "显示器状态",
+                TraditionalChinese: "螢幕狀態",
+                English: "Monitor Status",
+                Español: "Estado del monitor",
+                French: "État du moniteur",
+                Italian: "Stato Monitor",
+                Japanese: "モニター ステータス",
+                Nederlands: "Monitor Status",
+                BrazilianPortuguese: "Status do Monitor",
+                Russian: "Состояние монитора"
+            }
         },
         {
             ...JSON.parse(JSON.stringify(BackNodesEnum)),

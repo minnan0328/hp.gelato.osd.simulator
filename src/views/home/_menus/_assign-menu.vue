@@ -1,5 +1,5 @@
 <template>
-    <div :class="['menu assign-menu', mainSectionNodes!.key, { 'accessibility': menuStateResult.accessibility }]">
+    <div :class="['menu assign-menu', mainSectionNodes!.key, { 'accessibility': menuStateResult.accessibility.show }]">
         <div class="header">
             <p>{{ toLanguageText(mainSectionNodes!.language!) }}</p>
         </div>
@@ -133,7 +133,6 @@ function enabledBottomLine(node: Nodes) {
 .assign-menu {
     position: absolute;
 	background-color: $black-09;
-    transform: rotate(v-bind("menuStateResult.menuRotation"));
 	bottom: 34px;
 	right: 112px;
     background-color: $black-16;

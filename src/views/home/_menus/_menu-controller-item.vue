@@ -1,5 +1,5 @@
 <template>
-    <div :class="['menu-controller', { 'accessibility': menuStateResult.accessibility }]">
+    <div :class="['menu-controller', { 'accessibility': menuStateResult.accessibility.show }]">
         <template v-for="(currentButton, index) in handleControllerButtonList">
             <div :class="['controller-item', {
                 'controller-item-center': index == 0,
@@ -61,7 +61,6 @@ const props = defineProps<{
 
 		img {
             width: 16px;
-            transform:  rotate(v-bind("menuStateResult.menuRotation"));
 		}
 
         &.controller-item-center {

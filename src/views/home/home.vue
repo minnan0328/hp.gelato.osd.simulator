@@ -42,7 +42,7 @@
                                 <div class="menu-buttons-guide" v-if="showMonitorStatus || true">Menu Buttons</div>
                             </div>
 
-                            <div class="language-direction" v-if="enabledLanguageDirection">
+                            <div class="language-direction" v-if="menuStateResult.language !== 'English'">
                                 <p class="direction">The function is for demonstration purposes only. Returning to the previous page will restore to English.</p>
                             </div>
     
@@ -52,7 +52,6 @@
                                 v-model:showMonitorStatus="showMonitorStatus"
                                 v-model:showGamingSettingText="showGamingSettingText"
                                 v-model:showGamingCrosshair="showGamingCrosshair"
-                                v-model:enabledLanguageDirection="enabledLanguageDirection"
                                 ref="childMenusComponentRef">
                                 <template v-slot:openMonitor>
                                     <button class="controller-btn open-btn" @click="handleMonitor"></button>
@@ -73,8 +72,9 @@ import type { Nodes, HomeEvent, Language } from '@/types';
 import ribbon from '@/views/home/_ribbon/ribbon.vue';
 import monitorScreen from '@/views/home/_monitor-screen/monitor-screen.vue';
 import menus from '@/views/home/_menus/menus.vue';
-import { monitorResult } from '@/service/monitor-state-result';
+import { monitorResult, menuStateResult } from '@/service/monitor-state-result';
 import config from '@/config/config';
+
 
 const menuStore = useMenuStore();
 
@@ -110,7 +110,6 @@ const showMonitorStatus = ref(false);
 const showScreen = ref(false);
 const startUpFinish = ref(false);
 const childMenusComponentRef = ref(null);
-const enabledLanguageDirection = ref(false);
 
 // 1. gaming 的 refreshRate 及 messageTimers 啟用時候
 // 2. 1 啟用時，啟動 menu 不顯示

@@ -5,7 +5,6 @@ import LanguageNodes from './_language-nodes';
 import MenuPositionNodes from './_menu-position-nodes';
 import MenuTransparencyNodes from './_menu-transparency-nodes';
 import MenuTimeoutNodes from './_menu-timeout-nodes';
-import MenuRotationNodes from './_menu-rotation';
 import OSDMessagesNodes from './_OSD-messages-nodes/OSD-messages-nodes';
 import AssignButtonsNodes from './_assign-buttons/assign-buttons-nodes';
 
@@ -15,7 +14,6 @@ let LanguageNodesEnum = new LanguageNodes();
 let MenuPositionNodesEnum = new MenuPositionNodes();
 let MenuTransparencyNodesEnum = new MenuTransparencyNodes();
 let MenuTimeoutNodesEnum = new MenuTimeoutNodes();
-let MenuRotationNodesEnum = new MenuRotationNodes();
 let OSDMessagesNodesEnum = new OSDMessagesNodes();
 let AssignButtonsNodesEnum = new AssignButtonsNodes();
 
@@ -51,10 +49,6 @@ export default class Menu extends DefaultNodes implements Nodes {
         },
         {
             ...JSON.parse(JSON.stringify(MenuTimeoutNodesEnum)),
-            parents: this.key
-        },
-        {
-            ...JSON.parse(JSON.stringify(MenuRotationNodesEnum)),
             parents: this.key
         },
         {

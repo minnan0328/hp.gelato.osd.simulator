@@ -1,4 +1,5 @@
 import { useMenuStore } from '@/stores/index';
+import { monitorScreenResult } from '@/service/monitor-state-result';
 // utilities nodes
 import { OnNodes, OffNodes } from '@/models/class/_utilities';
 // color nodes
@@ -13,6 +14,13 @@ import AmdFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
 import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 import BrightnessNodes from '@/models/class/image/_brightness-nodes';
 import ContrastNodes from '@/models/class/image/_contrast-nodes';
+
+// menu nodes
+import LanguageNodes from '@/models/class/menu/_language-nodes';
+
+// managements nodes
+import DiagnosticPatternsNodes from '@/models/class/management/_diagnostic-patterns-nodes';
+import AccessibilityNodes from '@/models/class/management/_accessibility-nodes';
 
 const menuStore = useMenuStore();
 // utilities nodes
@@ -31,12 +39,23 @@ const DynamicContrastNodesEnum = new DynamicContrastNodes();
 const BrightnessNodesEnum = new BrightnessNodes();
 const ContrastNodesEnum = new ContrastNodes();
 
+// menu nodes
+const LanguageNodesEnum = new LanguageNodes();
+
+// managements nodes
+const DiagnosticPatternsNodesEnum = new DiagnosticPatternsNodes();
+const AccessibilityNodesEnum = new AccessibilityNodes();
+
 const brightnessNode = menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key);
 const contrastNode = menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key);
 const RGBGainAdjustNode = menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key);
 const dynamicContrastNode = menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key);
 const MPRTNode = menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key);
 const AMDFreeSyncNode = menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key);
+const languageNode = menuStore.$state.menu.nodes.find(n => n.key == LanguageNodesEnum.key);
+const diagnosticPatternsNode = menuStore.$state.management.nodes.find(n => n.key == DiagnosticPatternsNodesEnum.key);
+const accessibilityNode = menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key);
+
 
 export function setBrightnessValue() {
     menuStore.$state.information.nodes[2].selected = menuStore.$state.color.selected;
@@ -67,7 +86,6 @@ export function setBrightnessValue() {
         dynamicContrastNode.selected = OffNodesEnum.selected;
     }
 };
-
 
 export function setDynamicContrastValue() {
     dynamicContrastNode.result = OffNodesEnum.result;
@@ -110,4 +128,20 @@ export function setGamingNodesStatus() {
         // 當 AMD FreeSync 或 Dynamic Contrast 為 On 時 MPRT 為 disable，反之則為 enable
         MPRTNode.disabled = (AMDFreeSyncNode.result == OnNodesEnum.result || dynamicContrastNode.result == OnNodesEnum.result) ? true : false;
     }
+}
+
+export function restoreSpecialPresets() {
+    // 關閉診斷模式
+    monitorScreenResult.value.diagnosticPatterns.close();
+    diagnosticPatternsNode.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
+    diagnosticPatternsNode.result = DiagnosticPatternsNodesEnum.nodes[0].result;
+
+    // 恢復英文介面
+    languageNode.selected = 'English';
+    languageNode.result = 'English';
+    languageNode.page = 1;
+
+    // 取消無障礙模式
+    accessibilityNode.selected = OffNodesEnum.selected;
+    accessibilityNode.result = OffNodesEnum.result;
 }

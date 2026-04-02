@@ -1,7 +1,7 @@
 <template>
     <div class="menu-wrapper">
         <!-- 全部的選單 -->
-        <div :class="['menus', { 'accessibility': menuStateResult.accessibility }]" v-if="openAllMenu && menuState.menuPanel">
+        <div :class="['menus', { 'accessibility': menuStateResult.accessibility.show }]" v-if="openAllMenu && menuState.menuPanel">
             
             <headerSection></headerSection>
 
@@ -131,6 +131,7 @@ import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 // menu nodes
 import MenuPositionNodes from '@/models/class/menu/_menu-position-nodes';
 import LanguageNodes from '@/models/class/menu/_language-nodes';
+import AssignButtonsNodes from '@/models/class/menu/_assign-buttons/assign-buttons-nodes';
 
 // management nodes
 import FactoryResetNodes from '@/models/class/management/_factory-reset-nodes';
@@ -174,7 +175,8 @@ import {
 import { 
     setBrightnessValue, setDynamicContrastValue,
     resetBrightnessContrastValue, resetColorRGB, 
-    resetInputValue, setGamingNodesStatus 
+    resetInputValue, setGamingNodesStatus,
+    restoreSpecialPresets
 } from '@/service/set-default-value';
 
 const MenusDefaultEnum = new MenusDefaultModel();
@@ -192,6 +194,7 @@ const RGBGainAdjustNodesEnum = new RGBGainAdjustNodes();
 // menu nodes enum
 const MenuPositionNodesEnum = new MenuPositionNodes();
 const LanguageNodesEnum = new LanguageNodes();
+const AssignButtonsNodesEnum = new AssignButtonsNodes();
 
 // management nodes enum
 const FactoryResetNodesEnum = new FactoryResetNodes();
@@ -218,7 +221,6 @@ const CountdownTimerNodesEnum = new CountdownTimerNodes();
 const StartStopNodesEnum = new StartStopNodes();
 const ResetTimerNodesEnum = new ResetTimerNodes();
 
-
 const DefaultNodesEnum = new DefaultNodes();
 const BackNodesEnum = new BackNodes();
 const ResetNodesEnum = new ResetNodes();
@@ -242,6 +244,16 @@ const AssignEmptyNodesEnum = new AssignEmptyNodes();
 const PowerConfirmChangeNodesEnum = new PowerConfirmChangeNodes();
 
 const menuStore = useMenuStore();
+// gaming nodes enum
+const refreshRate = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == RefreshRateNodesEnum.key));
+const crosshair = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == CrosshairNodesEnum.key));
+const messageTimers = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == MessageTimersNodesEnum.key));
+// images node enum
+const brightness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
+const assignButtons = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == AssignButtonsNodesEnum.key));
+
+// color node enum
+const RGBGainAdjust = computed(()=> menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key));
 
 const homeEvent = inject("homeEvent") as HomeEvent;
 
@@ -252,7 +264,6 @@ const props = defineProps({
     showMonitorStatus: { type: Boolean, default: false },
     showGamingSettingText: { type: Boolean, default: false },
     showGamingCrosshair: { type: Boolean, default: false },
-    enabledLanguageDirection: { type: Boolean, default: false }
 });
 
 const emit = defineEmits([
@@ -261,7 +272,6 @@ const emit = defineEmits([
     'update:startUpFinish',
     'update:showGamingSettingText',
     'update:showGamingCrosshair',
-    'update:enabledLanguageDirection'
 ]);
 
 const menuTimeOutIntervalId = ref<number | null>(null);
@@ -347,7 +357,7 @@ const assignMenus = computed(() => {
         [AssignBrightnessNodesEnum.key]: {
             key: AssignBrightnessNodesEnum.key,
             icon: iconBrightness,
-            node: menuStore.$state.image.nodes[0]
+            node: brightness.value
         }, 
         [AssignColorNodesEnum.key]: {
             key: AssignColorNodesEnum.key,
@@ -367,17 +377,17 @@ const assignMenus = computed(() => {
         [AssignMessageTimersNodesEnum.key]: {
             key: AssignMessageTimersNodesEnum.key,
             icon: iconClock,
-            node: menuStore.$state.gaming.nodes[5]
+            node: messageTimers.value
         },
         [AssignRefreshRateNodesEnum.key]: {
             key: AssignRefreshRateNodesEnum.key,
             icon: iconFps,
-            node: menuStore.$state.gaming.nodes[3]
+            node: refreshRate.value
         },
         [AssignCrosshairNodesEnum.key]: {
             key: AssignCrosshairNodesEnum.key,
             icon: iconCrosshair,
-            node: menuStore.$state.gaming.nodes[4]
+            node: crosshair.value
         },
         [AssignEmptyNodesEnum.key]: {
             key: AssignEmptyNodesEnum.key,
@@ -404,7 +414,7 @@ const confirmState = reactive({
 });
 
 // 是否開啟OSD Message，當是原廠設定時，且 OSD Message 是啟用時
-const isOpenOSDMessage = computed(() => factorySettings.value && menuStore.$state.menu.nodes[5].result.includes(menuStore.$state.menu.nodes[5].nodes[2].result));
+const isOpenOSDMessage = computed(() => factorySettings.value && menuStateResult.value.OSDMessage.confirmMessage);
 
 // 當關閉螢幕時，關閉所有狀態
 watch(() => props.openMonitor, (newVal, oldVal) => {
@@ -507,13 +517,13 @@ const MenuControllerTypes: Record<string, ControllerButtonList> = reactive({
 const getAssignButton = computed(() => {
     return [
         // AssignButton1 default is AssignBrightness
-        assignMenus.value[`Assign${(menuStore.$state.menu.nodes[6].nodes![0].result as string).replace(/\s/g, '')}`],
+        assignMenus.value[`Assign${(assignButtons.value.nodes![0].result as string).replace(/\s/g, '')}`],
         // AssignButton2 default is AssignColor
-        assignMenus.value[`Assign${(menuStore.$state.menu.nodes[6].nodes![1].result as string).replace(/\s/g, '')}`],
+        assignMenus.value[`Assign${(assignButtons.value.nodes![1].result as string).replace(/\s/g, '')}`],
         // AssignButton3 default is AssignNextActiveInput
-        assignMenus.value[`Assign${(menuStore.$state.menu.nodes[6].nodes![2].result as string).replace(/\s/g, '')}`],
+        assignMenus.value[`Assign${(assignButtons.value.nodes![2].result as string).replace(/\s/g, '')}`],
         // AssignButton4 default is AssignDisplayInformation
-        assignMenus.value[`Assign${(menuStore.$state.menu.nodes[6].nodes![3].result as string).replace(/\s/g, '')}`]
+        assignMenus.value[`Assign${(assignButtons.value.nodes![3].result as string).replace(/\s/g, '')}`]
     ]
 });
 
@@ -585,17 +595,8 @@ function handlerModeControllerButtonList(nodes: Nodes, previousNodes: Nodes) {
     // 當下一層有節點時候的組合
     const nextButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkNext!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.next! ];
 
-    // 選單不同旋轉角度組合
-    type MenuRotationValue = 0 | 90 | 180 | 270;
-    const confirmedButtonListObj: Record<MenuRotationValue, ControllerButtonList[]> = {
-        0: [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ],
-        90: [ MenuControllerTypes.checkSave!, MenuControllerTypes.empty!, MenuControllerTypes.previous!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom! ],
-        180: [ MenuControllerTypes.checkSave!,  MenuControllerTypes.arrowBottom!, MenuControllerTypes.arrowUp!,  MenuControllerTypes.empty!, MenuControllerTypes.previous!],
-        270: [ MenuControllerTypes.checkSave!, MenuControllerTypes.previous!, MenuControllerTypes.empty!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.arrowUp!]
-    };
-
     // 確認選擇的按鈕組合
-    const confirmedButtonList: ControllerButtonList[] = confirmedButtonListObj[menuStateResult.value.menuRotationValue as MenuRotationValue];
+    const confirmedButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ];
     // range value 組合
     const rangeButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!,  MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ];
     // 多個 range value 組合
@@ -811,10 +812,6 @@ function handlerNextPanel(focusSelected = true) {
                     monitorScreenResult.value.diagnosticPatterns.implement();
                 }
 
-                if(menuState.thirdPanel.parents == LanguageNodesEnum.key) {
-                    emit("update:enabledLanguageDirection", true);
-                }
-
             }, focusSelected);
         } else if(menuState.secondPanel!.nodes && menuState.thirdPanel && menuState.thirdPanel.nodes && !menuState.fourthPanel) {
             isRadioNodes = menuState.thirdPanel?.mode == ModeType.radio && !!menuState.thirdPanel.nodes;
@@ -911,7 +908,7 @@ function handlePrevious() {
     // 設定亮度與顏色
     setBrightnessValue();
     //特殊邏輯，恢復預設值
-    returnToDefaultValue();
+    restoreSpecialPresets();
     // 選單 timeout
     handlerMenuTimeout();
 };
@@ -968,10 +965,10 @@ function handlerNavigation(direction: 'up' | 'down') {
                                         && menuState.secondPanel!.key != ResetNodesEnum.key
                                         && menuState.secondPanel!.key != ExitNodesEnum.key
                                     ) {
-                                        menus.value.nodes[1]!.nodes![0].result = menuState.secondPanel.brightness as number;
-                                        menus.value.nodes[2]!.nodes![8].nodes![0].result = menuState.secondPanel.rgb!.r as number;
-                                        menus.value.nodes[2]!.nodes![8].nodes![1].result = menuState.secondPanel.rgb!.g as number;
-                                        menus.value.nodes[2]!.nodes![8].nodes![2].result = menuState.secondPanel.rgb!.b as number;
+                                        brightness.value.nodes![0].result = menuState.secondPanel.brightness as number;
+                                        RGBGainAdjust.value.nodes![0].result = menuState.secondPanel.rgb!.r as number;
+                                        RGBGainAdjust.value.nodes![1].result = menuState.secondPanel.rgb!.g as number;
+                                        RGBGainAdjust.value.nodes![2].result = menuState.secondPanel.rgb!.b as number;
                                     }
                                 }
 
@@ -1926,35 +1923,8 @@ function handlerClose() {
     confirmState.confirmThirdPanelIndex = 0;
 
     setBrightnessValue();
-    returnToDefaultValue();
+    restoreSpecialPresets();
 };
-
-// 特殊邏輯
-// 將語言及診斷模式、選單旋轉角度恢復
-function returnToDefaultValue() {
-
-    // 關閉診斷模式
-    monitorScreenResult.value.diagnosticPatterns.close();
-    // 恢復英文且回到第一頁
-    menuStore.$state.menu.nodes[0].selected = "English";
-    menuStore.$state.menu.nodes[0].result = "English";
-    menuStore.$state.menu.nodes[0].page = 1;
-    emit("update:enabledLanguageDirection", false);
-
-
-    //取消無障礙模式
-    menuStore.$state.management.nodes[3].selected = OffNodesEnum.selected;
-    menuStore.$state.management.nodes[3].result = OffNodesEnum.result;
-
-    // 恢復預設
-    menuStore.$state.management.nodes[2].selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
-    menuStore.$state.management.nodes[2].result = DiagnosticPatternsNodesEnum.nodes[0].result;
-
-    // 選單旋轉角度恢復
-    menuStore.$state.menu.nodes[4].selected = "Landscape (0°)";
-    menuStore.$state.menu.nodes[4].result = "Landscape (0°)";
-}
-
 
 // 開放給 home 使用
 defineExpose({ handlerClose });
@@ -1998,7 +1968,7 @@ function handlerMenuTimeout() {
                 // 恢復原本選擇亮度與顏色
                 setBrightnessValue();
                 // 特殊邏輯，恢復預設值
-                returnToDefaultValue();
+                restoreSpecialPresets();
             }
     
         }, (menuStateResult.value.menuTimeout as number) * 1000);
@@ -2028,7 +1998,6 @@ function handlerMenuTimeout() {
 	width: v-bind("menuStateResult.menuSize.menuWidth");
 	height: v-bind("menuStateResult.menuSize.menuHeight");
     z-index: 2;
-    transform: rotate(v-bind("menuStateResult.menuRotation"));
 
 	.body {
 		height: calc(100% - 44px);
@@ -2042,7 +2011,7 @@ function handlerMenuTimeout() {
     opacity: v-bind("menuStateResult.menuTransparency");
     
     &.accessibility {
-        transform: scale(1.3) rotate(v-bind("menuStateResult.menuRotation"));
+        transform: scale(1.3);
         bottom: 80px;
         left: 294px;
         margin: 0;
