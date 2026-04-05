@@ -195,7 +195,7 @@ export const monitorScreenResult = computed(() => {
             implement: function () {
                 if(this.enabled) {
                     const resultIndex = diagnosticPatterns.value?.nodes!.findIndex((node: Nodes) => node.result === diagnosticPatterns.value.result);
-                    
+
                     if(resultIndex == 0 && DiagnosticPatternsEnum.intervalId == null) {
                         if(DiagnosticPatternsEnum.intervalId) {
                             return
@@ -217,6 +217,11 @@ export const monitorScreenResult = computed(() => {
 
                         DiagnosticPatternsEnum.index = resultIndex - 1;
                         this.result = DiagnosticPatternsEnum.colors[DiagnosticPatternsEnum.index]!;
+                    } else if(diagnosticPatterns.value?.nodes.length == resultIndex) {
+                        this.clearInterval();
+                        DiagnosticPatternsEnum.intervalId = null;
+                        DiagnosticPatternsEnum.enabled = false;
+
                     }
                 } else {
                     if (DiagnosticPatternsEnum.intervalId !== null) {

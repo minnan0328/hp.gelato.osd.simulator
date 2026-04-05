@@ -179,6 +179,7 @@ import {
     resetInputValue, setGamingNodesStatus,
     restoreSpecialPresets
 } from '@/service/set-default-value';
+import { f } from 'vue-router/dist/router-CWoNjPRp.mjs';
 
 const MenusDefaultEnum = new MenusDefaultModel();
 
@@ -1046,6 +1047,10 @@ function handlerNavigation(direction: 'up' | 'down') {
                                 menuState.thirdPanel.horizontalRangeFocus = true;
                             }
                         }
+                        if(menuState.thirdPanel.parents == DiagnosticPatternsNodesEnum.key && menuState.thirdPanel.key == BackNodesEnum.key) {
+                            monitorScreenResult.value.diagnosticPatterns.enabled = false;
+                            monitorScreenResult.value.diagnosticPatterns.clearInterval();
+                        }
     
                         if(menuState.thirdPanel.livePreview) {
                             // 即時預覽效果的時候，暫存原始的值，當沒確認時，反回上一步需要恢復為暫存的值
@@ -1151,7 +1156,6 @@ function updatePanelIndex(node: Nodes, nodeIndex: number, step: number, send: (p
                 // 重置下一層的 index 為第一個
                 menuState.thirdPanelIndex = step > 0 ? 0 : (node.nodes[index]!.nodes!.length - 2);
                 handlerNextPanel(false);
-
             }
         }
     }
