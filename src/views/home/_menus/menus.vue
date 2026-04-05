@@ -36,7 +36,7 @@
         <!-- 原廠設定改變的 conform -->
         
         <!-- 控制選單按鈕 -->
-        <menuControllerItem v-if="openControllerMenus" v-model:handleControllerButtonList="handleControllerButtonList!"></menuControllerItem>
+        <menuControllerItem v-if="openControllerMenus && !enabledDiagnosticPatternsFullScreen" v-model:handleControllerButtonList="handleControllerButtonList!"></menuControllerItem>
         <!-- 控制選單按鈕 -->
 
         <!-- 控制選單按鈕-點擊範圍 -->
@@ -287,6 +287,7 @@ const openControllerMenus = ref(false);
 const openAllMenu = ref(false);
 const openAssignMenu = ref(false);
 const factorySettings = ref(true);
+const enabledDiagnosticPatternsFullScreen = ref(false);
 
 const menus = computed(() => {
     return {
@@ -522,7 +523,7 @@ function selectedMenuPanel(nodes: Nodes) {
 /* 控制選單按鈕組合列表 */
 // 是否啟用選單控制按鈕
 const isCrosshairLocationNodes = computed(() => gamingResult.value.crosshairLocation.enabled && gamingResult.value.crosshairLocation.start && !openAllMenu.value && !openAssignMenu.value);
-const isMenuControllerButton = computed(() => openControllerMenus.value && !openAllMenu.value && !openAssignMenu.value && !confirmState.openConfirm && !isCrosshairLocationNodes.value);
+const isMenuControllerButton = computed(() => openControllerMenus.value && !openAllMenu.value && !openAssignMenu.value && !confirmState.openConfirm && !enabledDiagnosticPatternsFullScreen.value && !isCrosshairLocationNodes.value);
 
 const MenuControllerTypes: Record<string, ControllerButtonList> = reactive({
     empty: { image: null, event: () => {}, stopEvent: () => {}, type: "Button" },
@@ -566,6 +567,7 @@ const getAssignButton = computed(() => {
 });
 
 const confirmButtonList:ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.confirmClose!, MenuControllerTypes.empty!, MenuControllerTypes.arrowLeft!, MenuControllerTypes.arrowRight!  ];
+const diagnosticPatternsButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.checkSave!, MenuControllerTypes.checkSave!, MenuControllerTypes.checkSave! ];
 
 const handleControllerButtonList = computed<ControllerButtonList[] | null>(() => {
     if(!props.openMonitor) return[];
@@ -597,6 +599,10 @@ const handleControllerButtonList = computed<ControllerButtonList[] | null>(() =>
     
     if(confirmState.openConfirm && confirmState.confirmMainPanel) {
         return confirmButtonList;
+    }
+
+    if(enabledDiagnosticPatternsFullScreen.value) {
+        return diagnosticPatternsButtonList;
     }
 
     return createMenuButtonList();
@@ -1430,6 +1436,8 @@ function handlerSave(currentPanelNumber = 0) {
         handlerMenuTimeout();
     } else if(confirmState.openConfirm) {
         saveNodesValue(confirmState.confirmThirdPanel!, confirmState.confirmSecondPanel!);
+    } else if(enabledDiagnosticPatternsFullScreen.value) {
+        saveNodesValue(menuState.thirdPanel!, menuState.secondPanel!);
     }
 };
 
@@ -1445,7 +1453,6 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
         [ResetNodesEnum.key]: () => {
             handleResetAction();
             handlerNavigation("down");
-
         },
         // 上下一頁 目前只處理 secondaryNodesPagination(第三層畫面)
         [NextPageButtonsNodesEnum.key]: () => handlerNavigation("down"),
@@ -1456,7 +1463,8 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
     const previousNodesActions: { [key: string]: () => void } = {
         // 處理 Confirm 動作
         ChangingMessage: () => handleChangingMessageAction(nodes),
-        [FactoryResetNodesEnum.key]: () => handleFactoryResetAction(nodes, previousNodes)
+        [FactoryResetNodesEnum.key]: () => handleFactoryResetAction(nodes, previousNodes),
+        [DiagnosticPatternsNodesEnum.key]: () => handlerDiagnosticPatternsAction()
     }
     
 
@@ -1841,6 +1849,32 @@ function factorySettingOSDMessage() {
     handlerMenuTimeout();
     setupConfirmState();
 };
+
+
+
+function handlerDiagnosticPatternsAction() {
+    enabledDiagnosticPatternsFullScreen.value = !enabledDiagnosticPatternsFullScreen.value;
+    if(enabledDiagnosticPatternsFullScreen.value) {
+        hideMenu();
+    } else {
+        restoreSelectedMenu();
+    }
+};
+
+function hideMenu(){
+    // 當是開啟全部選單時，暫時關閉且紀錄目前開啟的選當類型
+    if(openAllMenu.value) {
+        openAllMenu.value = false;
+        menuState.selectedMenus = "openAllMenu";
+    };
+    
+    // 當是開啟自訂選單時，暫時關閉且紀錄目前開啟的選當類型
+    if(openAssignMenu.value) {
+        openAssignMenu.value = false;
+        menuState.selectedMenus = "openAssignMenu";
+    };
+}
+
 
 function handleCrosshairLocationAction() {
     if (gamingResult.value.crosshairLocation.enabled && gamingResult.value.crosshairLocation.start == false) {
