@@ -179,7 +179,6 @@ import {
     resetInputValue, setGamingNodesStatus,
     restoreSpecialPresets
 } from '@/service/set-default-value';
-import { f } from 'vue-router/dist/router-CWoNjPRp.mjs';
 
 const MenusDefaultEnum = new MenusDefaultModel();
 
