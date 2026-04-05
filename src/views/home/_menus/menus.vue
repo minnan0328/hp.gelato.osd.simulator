@@ -1,7 +1,6 @@
 <template>
     <div class="menu-wrapper">
         <!-- 全部的選單 -->
-         {{ gamingResult.MPRT.value }}
         <div :class="['menus', { 'accessibility': menuStateResult.accessibility.show }]" v-if="openAllMenu && menuState.menuPanel">
             
             <headerSection></headerSection>

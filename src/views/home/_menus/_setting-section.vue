@@ -62,6 +62,10 @@
                         <!-- value -->
                     </div>
                 </template>
+
+                <div class="setting-item setting-info input" v-if="mainSectionNodes.key == inputNodesEnum.key">
+                    <p>The HP OMEN 24e monitor model is equipped with only one HDMI port.</p>
+                </div>
             </div>
             <div v-if="mainSectionNodes && secondarySectionNodes && secondarySectionNodes.nodes" 
                 :class="['secondary-section', { 'customRGB-range-section': secondarySectionNodes.key == rgbGainAdjustNodesEnum.key }]">
@@ -160,7 +164,7 @@
                     <img src="@/assets/images/energy-star.jpg" alt="">
                 </div> -->
 
-                <div class="setting-item image-scaling" v-if="secondarySectionNodes.key == imageScalingNodesEnum.key">
+                <div class="setting-item setting-info image-scaling" v-if="secondarySectionNodes.key == imageScalingNodesEnum.key">
                     <p>The “Image Scaling” OSD menu for this product is disabled for all 16:9 aspect ratio resolutions.</p>
                     <br/>
                     <p>But for this OSD training simulation, the menu will remain active for the simulated 1920x1080 resolution.</p>
@@ -207,15 +211,15 @@ import previousPageButtons from './_components/_previous-page-buttons.vue';
 import nextPageButtons from './_components/_next-page-button.vue';
 import svgIcon from './_components/_icon-svg.vue';
 
-import FactoryResetNodes from '@/models/class/management/_factory-reset-nodes';
 import ImageScalingNodes from '@/models/class/image/_image-scaling-nodes';
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 import ConfigureNodes from '@/models/class/gaming/_crosshair/_configure-nodes';
+import InputNodes from '@/models/class/input/input';
 
-const factoryResetNodesEnum = new FactoryResetNodes();
 const imageScalingNodesEnum = new ImageScalingNodes();
 const rgbGainAdjustNodesEnum = new RGBGainAdjustNodes();
 const configureNodesEnum = new ConfigureNodes();
+const inputNodesEnum = new InputNodes();
 
 const props = defineProps({
     mainSectionNodes: {
@@ -247,7 +251,7 @@ const isTwoColumns = computed(() => {
 });
 
 function enabledBottomLine(node: Nodes) {
-    const enabledNodes = ["ResetTimer", "MessageTimers", "Configure", "option5bmp", "RefreshRate", "MultiMonitorAlign", "OSDMessages"];
+    const enabledNodes = ["ResetTimer", "MessageTimers", "Configure", "option5bmp", "RefreshRate", "MultiMonitorAlign"];
 
     return enabledNodes.includes(node.key) && isEnableNode(node);
 }

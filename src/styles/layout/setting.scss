@@ -174,12 +174,19 @@
         }
     }
 
-    .image-scaling {
+    .setting-info {
         display: block;
         font-size: 10px;
         line-height: 1.22;
         color: #f3d139;
+    }
+
+    .image-scaling {
         margin: 48px 24px;
+    }
+
+    .input {
+        margin: 16px 8px;
     }
 
     .crosshair {
