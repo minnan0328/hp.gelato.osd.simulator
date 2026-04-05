@@ -50,8 +50,8 @@ export default class Information extends DefaultNodes implements Nodes {
         {
             ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
             key: "OptimalMode",
-            selected: "1920x1080 180Hz",
-            result: "1920x1080 180Hz",
+            selected: "1920x1080 144Hz",
+            result: "1920x1080 144Hz",
             displayValue: true,
             parents: this.key,
             mode: ModeType.info,
@@ -116,8 +116,8 @@ export default class Information extends DefaultNodes implements Nodes {
         {
             ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
             key: "FWPackageVersion",
-            selected: "0.0.4.0",
-            result: "0.0.4.0",
+            selected: "0.10.6.0",
+            result: "0.10.6.0",
             displayValue: true,
             parents: this.key,
             mode: ModeType.info,
@@ -138,8 +138,8 @@ export default class Information extends DefaultNodes implements Nodes {
         {
             ...JSON.parse(JSON.stringify(DefaultNodesEnum)),
             key: "HWRevision",
-            selected: "C2IM0040",
-            result: "C2IM0040",
+            selected: "C2IM0060",
+            result: "C2IM0060",
             displayValue: true,
             parents: this.key,
             mode: ModeType.info,

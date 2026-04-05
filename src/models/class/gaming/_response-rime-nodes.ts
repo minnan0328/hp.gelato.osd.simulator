@@ -8,8 +8,8 @@ const BackNodesEnum = new BackNodes();
 
 export default class ResponseTimeNodes extends DefaultNodes implements Nodes {
     key = "ResponseTime";
-    selected = "Level 1";
-    result = "Level 1";
+    selected = "Level 2 (Fast)";
+    result = "Level 2 (Fast)";
     displayValue = true;
     size = 4;
     mode = ModeType.button;

@@ -9,7 +9,7 @@ import dialog from '@/service/dialog/dialog';
 import { OnNodes, OffNodes } from '@/models/class/_utilities';
 // gaming nodes
 import AMDFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
-import ResponseRimeNodes from '@/models/class/gaming/_response-rime-nodes';
+import MPRTNodes from '@/models/class/gaming/_mprt-nodes';
 import RefreshRateNodes from '@/models/class/gaming/_refresh-rate-nodes';
 import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
 import MessageTimersNodes from '@/models/class/gaming/_message-timers/message-timers-nodes';
@@ -48,11 +48,12 @@ import iconClock from '@/assets/icons/icon-clock.svg';
 
 const menuStore = useMenuStore();
 const OnNodesEnum = new OnNodes();
+const OffNodesEnum = new OffNodes();
 
 // gaming nodes
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
+const MPRTNodesEnum = new MPRTNodes();
 const MessageTimersNodesEnum = new MessageTimersNodes();
-const ResponseRimeNodesEnum = new ResponseRimeNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
 const SpeedrunTimerNodesEnum = new SpeedrunTimerNodes();
 const CountdownTimerNodesEnum = new CountdownTimerNodes();
@@ -86,7 +87,7 @@ const PowerOnRecallNodesEnum = new PowerOnRecall();
 // monitor screen result
 // gaming nodes
 const AMDFreeSync = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == AMDFreeSyncNodesEnum.key));
-const ResponseRime = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == ResponseRimeNodesEnum.key));
+const MPRT = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == MPRTNodesEnum.key));
 const refreshRate = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == RefreshRateNodesEnum.key));
 const crosshair = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == CrosshairNodesEnum.key));
 const messageTimers = computed(()=> menuStore.$state.gaming.nodes?.find(n => n.key == MessageTimersNodesEnum.key));
@@ -360,6 +361,13 @@ export const gamingResult = computed(() => {
                     ? "AMD FreeSync"
                     : "Normal"
                 : "Off",
+        },
+        // 取得 Moving Picture Response Time
+        MPRT: {
+            key: MPRTNodesEnum.key,
+            value: MPRT.value?.result == OffNodesEnum.result
+                ? 0 
+                : (Number(MPRT.value?.result.split("Level").pop()?.trim()) * 0.02) || 0
         },
         // 當前更新率
         refreshRate: {

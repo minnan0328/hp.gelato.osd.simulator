@@ -216,7 +216,7 @@ onMounted(() => {
         mix-blend-mode: multiply;
 
         filter: 
-            brightness(v-bind("monitorScreenResult.brightness"))
+            brightness(v-bind("monitorScreenResult.brightness - gamingResult.MPRT.value"))
             blur(v-bind("monitorScreenResult.sharpness"));
     }
 

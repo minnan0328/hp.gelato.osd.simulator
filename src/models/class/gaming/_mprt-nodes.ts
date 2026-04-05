@@ -13,7 +13,7 @@ export default class MprtNodes extends DefaultNodes implements Nodes {
     result = OffNodesEnum.result;
     displayValue = true;
     disabled = true;
-    size = 6;
+    size = 7;
     mode = ModeType.button;
     language = {
         German: "MPRT",
