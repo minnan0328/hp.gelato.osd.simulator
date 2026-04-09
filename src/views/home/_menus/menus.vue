@@ -153,6 +153,7 @@ import CrosshairLocationNodes from '@/models/class/gaming/_crosshair/_location-n
 import MultiMonitorAlignNodes from '@/models/class/gaming/_multi-monitor-align-nodes';
 
 // message timers nodes
+import GamingNodes from '@/models/class/gaming/gaming';
 import MessageTimersNodes from '@/models/class/gaming/_message-timers/message-timers-nodes';
 import SpeedrunTimerNodes from '@/models/class/gaming/_message-timers/_speedrun-timer-nodes';
 import CountdownTimerNodes from '@/models/class/gaming/_message-timers/_countdown-timer-nodes';
@@ -209,6 +210,7 @@ const AutoSleepModeNodesEnum = new AutoSleepModeNodes();
 const InputNodesEnum = new InputNodes();
 
 // gaming nodes enum
+const GamingNodesEnum = new GamingNodes();
 const ResponseRiteNodesEnum = new ResponseRiteNodes();
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
@@ -1214,14 +1216,19 @@ function handlerRangeValue(step: string) {
     function calculateValue(nodes: Nodes, previousNodes: Nodes){
         if(nodes.mode == ModeType.verticalRange || nodes.mode == ModeType.horizontalRange) {
 
+            let stepCount = nodes.step as number;
+
             if (
                 previousNodes.key == CountdownTimerNodesEnum.key &&
-                typeof nodes.result === "number" &&
-                nodes.result > 5
+                typeof nodes.result === "number"
             ) {
-                nodes.step = 5;
-            } else {
-                nodes.step = 1;
+                if(step == "subtract") {
+                    stepCount = nodes.result <= 5 ? 1 : 5;
+                } else if(step == "add") {
+                    stepCount = nodes.result < 5 ? 1 : 5;
+                }
+
+                nodes.step = stepCount;
             }
 
             if (
@@ -1231,8 +1238,8 @@ function handlerRangeValue(step: string) {
                 (nodes.selected as number) > nodes.rangeMin &&
                 (nodes.selected as number) <= nodes.rangeMax
             ) {
-                (nodes.selected as number) -= nodes.step;
-                (nodes.result as number) -= nodes.step;
+                (nodes.selected as number) -= nodes.step as number;
+                (nodes.result as number) -= nodes.step as number;
             } 
             if (
                 step == "add" &&
@@ -1241,8 +1248,8 @@ function handlerRangeValue(step: string) {
                 (nodes.selected as number) >= nodes.rangeMin &&
                 (nodes.selected as number) < nodes.rangeMax
             ) {
-                (nodes.selected as number) += nodes.step;
-                (nodes.result as number) += nodes.step;
+                (nodes.selected as number) += nodes.step as number;
+                (nodes.result as number) += nodes.step as number;
             }
 
             // 當為 RGB Gain Adjust 時候，調整完後不更新 selected 及 result 值
@@ -1755,10 +1762,6 @@ function handleResetAction() {
         return;
     }
 
-    if(menuState.menuPanel?.key == ImageNodesEnum.key) {
-        resetBrightnessContrastValue();
-    };
-
     if(menuState.menuPanel?.key == ColorNodesEnum.key) {
         resetColorRGB();
         return
@@ -1773,7 +1776,6 @@ function handleResetAction() {
     const panel = resetPanel[menuState.currentPanelNumber];
     if (!panel) return;
 
-
     let key =  panel.key;
 
     // 遞迴尋找並重設 menuStore.$state 與 MenusDefaultEnum
@@ -1786,6 +1788,16 @@ function handleResetAction() {
             break;
         }
     }
+
+    if(menuState.menuPanel?.key == ImageNodesEnum.key) {
+        resetBrightnessContrastValue();
+    };
+
+    // 重置 MessageTimers 本地計時器狀態
+    if (key === GamingNodesEnum.key  || key === MessageTimersNodesEnum.key) {
+        gamingResult.value.messageTimers.resetTimer();
+    }
+
     if (!found) {
         console.warn('handleResetAction: key not found in menuStore/MenusDefaultEnum', key);
     }
@@ -1796,6 +1808,7 @@ function handleFactoryResetAction(nodes: Nodes, previousNodes: Nodes) {
     if (nodes.key == YesNodesEnum.key) {
         factorySettings.value = true;
         menuStore.$resetAll();
+        gamingResult.value.messageTimers.resetTimer();
         handlerClose();
         emit("update:showScreen", false);
 
