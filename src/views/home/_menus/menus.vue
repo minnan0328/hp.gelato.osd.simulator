@@ -644,7 +644,7 @@ function handlerModeControllerButtonList(nodes: Nodes, previousNodes: Nodes) {
     // range value 組合
     const rangeButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!,  MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ];
     // 多個 range value 組合
-    const rangeNextButtonList: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!,  MenuControllerTypes.previous!, MenuControllerTypes.nextRight! ];
+    const rangeNextButtonList: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.previous!, MenuControllerTypes.nextRight!,  MenuControllerTypes.rangeSubtract!, MenuControllerTypes.rangeAdd! ];
     // 多個直向 range value 組合，且最後一個時候
     const rangeNextButtonListLast: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.next! ];
     // 多個縱向 range value 組合 unfocus
@@ -1757,7 +1757,6 @@ function handleResetAction() {
 
     if(menuState.menuPanel?.key == ImageNodesEnum.key) {
         resetBrightnessContrastValue();
-        return;
     };
 
     if(menuState.menuPanel?.key == ColorNodesEnum.key) {

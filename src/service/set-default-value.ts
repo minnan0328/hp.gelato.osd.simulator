@@ -131,17 +131,18 @@ export function setGamingNodesStatus() {
 }
 
 export function restoreSpecialPresets() {
-    // 關閉診斷模式
-    monitorScreenResult.value.diagnosticPatterns.close();
-    diagnosticPatternsNode.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
-    diagnosticPatternsNode.result = DiagnosticPatternsNodesEnum.nodes[0].result;
-
+    
     // 恢復英文介面
     languageNode.selected = 'English';
     languageNode.result = 'English';
     languageNode.page = 1;
-
+    
     // 取消無障礙模式
     accessibilityNode.selected = OffNodesEnum.selected;
     accessibilityNode.result = OffNodesEnum.result;
+
+    // 關閉診斷模式
+    diagnosticPatternsNode.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
+    diagnosticPatternsNode.result = DiagnosticPatternsNodesEnum.nodes[0].result;
+    monitorScreenResult.value.diagnosticPatterns.close();
 }

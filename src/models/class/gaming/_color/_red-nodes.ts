@@ -3,12 +3,11 @@ import { ModeType } from "@/types";
 import { DefaultNodes } from '../../_utilities';
 
 export default class RedNodes extends DefaultNodes implements Nodes {
-    key = "Red";
+    key = "HyperXRed";
     selected = "HyperX Red";
     result = "HyperX Red";
     optionColor = "rgb(255, 0, 0)";
     livePreview = true;
-    disabled = true;
     mode = ModeType.radio;
     language = {
         German: "Rot",

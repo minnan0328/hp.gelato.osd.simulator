@@ -11,7 +11,7 @@ export default class amdFreeSync extends DefaultNodes implements Nodes {
     selected = OnNodesEnum.selected;
     result = OnNodesEnum.result;
     displayValue = true;
-    size = 2;
+    size = 3;
     mode = ModeType.button;
     language = {
         English: "Variable Refresh Rate",

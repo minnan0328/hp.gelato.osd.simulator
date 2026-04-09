@@ -11,7 +11,7 @@ export default class ResponseTimeNodes extends DefaultNodes implements Nodes {
     selected = "Level 2 (Fast)";
     result = "Level 2 (Fast)";
     displayValue = true;
-    size = 4;
+    size = 5;
     mode = ModeType.button;
     language = {
         German: "Reaktionszeit",

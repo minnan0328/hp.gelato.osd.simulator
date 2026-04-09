@@ -4,7 +4,7 @@
             <img src="@/assets/images/hp-old-logo.png" alt="HP">
         </div>
         <div class="title">
-            <h2>{{config.screenModel}} OSD Simulator</h2>
+            <h2>{{config.company}} {{config.screenModel}} OSD Simulator</h2>
         </div>
     </div>
 </template>

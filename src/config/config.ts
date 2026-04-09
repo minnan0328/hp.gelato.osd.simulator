@@ -1,5 +1,5 @@
 const config = {
-    company: "",
+    company: "HyperX",
     screenModel: "OMEN 27e / 24e",
 }
 
