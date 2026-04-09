@@ -21,7 +21,7 @@
 
             <div class="range-text" v-if="!isColor" >
                 <span class="s" v-text="currentNode.selected"></span>
-                <span v-if="currentNode.unit" v-text="toLanguageText(currentNode.unit)"></span>
+                <span v-if="currentNode.unitText" v-text="toLanguageText(currentNode.unitText)"></span>
             </div>
 
             <div class="range-max-value">
@@ -142,7 +142,7 @@ function convertRange(value: number, rangeMin: number, rangeMax: number) {
 
             &.selected:not(.disabled) {
                 background-color: $black;
-                border: 1px solid $blue;
+                border: 1px solid $selected-border-color;;
                 color: $white;
             }
 

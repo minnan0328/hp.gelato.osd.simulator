@@ -165,10 +165,10 @@ export const monitorScreenResult = computed(() => {
             monitorWidth: `${monitorWidth}px`,
             monitorHeight: `${monitorHeight}px`
         }, 
-        // 取得亮度值 Brightness
-        brightness: brightness.value.nodes[0].result == 100 ? (brightness.value.nodes[0].result / 100) : (((brightness.value.nodes[0].result / 2 ) + 30) / 100),
-        // 取得對比值 Contrast
-        contrast: contrast.value.nodes[0].result == 100 ? (1 - (contrast.value.nodes[0].result / 100)) : ((70 / 100) - ((contrast.value.nodes[0].result / 2 ) + 30) / 100),
+        // 取得亮度值 Brightness (每次遞減/遞增 1% 對應 0.01，0% 時保留 0.3)
+        brightness: Math.max(0.3, brightness.value.nodes[0].result / 100),
+        // 取得對比值 Contrast (每次遞減/遞增 1% 對應 0.01，0% 時保留 0.3)
+        contrast: 1 - Math.max(0.3, contrast.value.nodes[0].result / 100),
         RGB: toImageColor.value,
         // 取得銳利度
         sharpness: getSharpness.value,

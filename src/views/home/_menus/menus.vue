@@ -539,6 +539,7 @@ const MenuControllerTypes: Record<string, ControllerButtonList> = reactive({
     arrowRight: { image: iconArrowRight, event: () => handlerNavigation('up'), stopEvent: () => {}, type: "Button" },
     arrowLeft: { image: iconArrowLeft, event: () => handlerNavigation('down'), stopEvent: () => {}, type: "Button" },
     previous: { image: iconPrevious, event: handlePrevious, stopEvent: () => {}, type: "Button" },
+    previousLeft: { image: iconNextLeft, event: handlePrevious, stopEvent: () => {}, type: "Button" },
     previousSave: { image: iconPrevious, event: handlerSave, stopEvent: () => {}, type: "Button" },
     checkNext: { image: iconCheck, event: handlerNextPanel, stopEvent: () => {}, type: "Button" },
     next: { image: iconNext, event: handlerNextPanel, stopEvent: () => {}, type: "Button" },
@@ -645,12 +646,16 @@ function handlerModeControllerButtonList(nodes: Nodes, previousNodes: Nodes) {
     const confirmedButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ];
     // range value 組合
     const rangeButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!,  MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.empty! ];
-    // 多個 range value 組合
-    const rangeNextButtonList: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.previous!, MenuControllerTypes.nextRight!,  MenuControllerTypes.rangeSubtract!, MenuControllerTypes.rangeAdd! ];
+    // 多個直向 range value 組合，選項為第一個且
+    const verticalRangeNextButtonListFirst: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.nextRight! ];
+    // 多個直向 range value 組合，選項為中間的
+    const verticalRangeNextButtonListMiddle: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previousLeft!, MenuControllerTypes.nextRight! ];
     // 多個直向 range value 組合，且最後一個時候
-    const rangeNextButtonListLast: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previous!, MenuControllerTypes.next! ];
-    // 多個縱向 range value 組合 unfocus
-    const rangeNextButtonListUnfocus: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.nextSave! ];
+    const verticalRangeNextButtonListLast: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.rangeAdd!, MenuControllerTypes.rangeSubtract!, MenuControllerTypes.previousLeft!, MenuControllerTypes.empty! ];
+    // 多個橫向 range value 組合
+    const horizontalRangeNextButtonList: ControllerButtonList[] = [ MenuControllerTypes.empty!, MenuControllerTypes.previous!, MenuControllerTypes.nextRight!,  MenuControllerTypes.rangeSubtract!, MenuControllerTypes.rangeAdd! ];
+    // 多個橫向 range value 組合 unfocus
+    const horizontalRangeNextButtonListUnfocus: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.previous!, MenuControllerTypes.nextSave! ];
     // assign button 確認選擇的按鈕組合
     const confirmedAssignButtonList: ControllerButtonList[] = [ MenuControllerTypes.checkSave!, MenuControllerTypes.arrowUp!, MenuControllerTypes.arrowBottom!, MenuControllerTypes.nextAssignLeft!, MenuControllerTypes.nextAssignRight! ];
     // assign button range value 組合
@@ -698,12 +703,16 @@ function handlerModeControllerButtonList(nodes: Nodes, previousNodes: Nodes) {
 
         if(isVerticalRangeNode) {
             // 判斷是不是最後一個
-            return nodes.key == previousNodes!.nodes![previousNodes!.nodes!.length - 1]!.key ? rangeNextButtonListLast : rangeNextButtonList
+            return nodes.key == previousNodes!.nodes![previousNodes!.nodes!.length - 1]!.key
+            ? verticalRangeNextButtonListLast
+            : nodes.key == previousNodes!.nodes![0]!.key
+            ? verticalRangeNextButtonListFirst
+            : verticalRangeNextButtonListMiddle;
         } 
 
         if(isHorizontalRangeNode) {
             // 多個橫向 range value， 是否為focus or unfocus
-            return nodes.horizontalRangeFocus ? rangeNextButtonList : rangeNextButtonListUnfocus;
+            return nodes.horizontalRangeFocus ? horizontalRangeNextButtonList : horizontalRangeNextButtonListUnfocus;
         } 
 
         return nextButtonList;

@@ -59,7 +59,6 @@ export class DefaultNodes implements Nodes {
     useIcon = false;
     svgIcon = null;
     nodes!: Nodes[] | null;
-    unit!: Language | null;
 };
 
 export class ResetNodes extends DefaultNodes implements Nodes {
