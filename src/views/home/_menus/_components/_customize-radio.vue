@@ -2,6 +2,7 @@
     <div v-if="currentNode.mode == ModeType.radio"
         :class="['customize-radio item',  currentNode.key, currentNode.parents, {
             selected: nodes?.key == currentNode.key,
+            focus: nodes && nodes == currentNode && childNodes,
             'border-bottom-line': isLastNode(currentNode, previousNodes!),
             disabled: currentNode.disabled
         }]">
@@ -27,6 +28,11 @@ const props = defineProps({
         default: null
     },
     previousNodes: {
+        type: Object as PropType<Nodes | null>,
+        required: false,
+        default: null
+    },
+    childNodes: {
         type: Object as PropType<Nodes | null>,
         required: false,
         default: null

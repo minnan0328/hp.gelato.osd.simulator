@@ -32,7 +32,8 @@
 
                         <customizeRadio
                             :currentNode="secondNodes" :nodes="secondarySectionNodes"
-                            :previousNodes="mainSectionNodes" :bottomLine="false">
+                            :previousNodes="mainSectionNodes" :bottomLine="false"
+                            :childNodes="thirdSectionNodes">
                         </customizeRadio>
 
                         <customizeCheckbox

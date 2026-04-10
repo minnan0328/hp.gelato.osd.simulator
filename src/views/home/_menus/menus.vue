@@ -1846,6 +1846,8 @@ function handleChangingMessageAction(nodes: Nodes) {
             restoreSelectedMenu();
             // 處理儲存內容
             handlerSave(menuState.currentPanelNumber);
+            // 如果有下一層要跳至該層內容
+            handlerNextPanel();
         },
         Cancel: () => handlerCloseConfirmAction()
     };

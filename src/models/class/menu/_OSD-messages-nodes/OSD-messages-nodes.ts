@@ -9,7 +9,7 @@ const BackNodesEnum = new BackNodes();
 
 export default class OSDMessagesNodes extends DefaultNodes implements Nodes {
     key = "OSDMessages";
-    selected = ["Power-On Logo", "No Input Signal Warning", "Confirm Change Message", "Monitor Status"];
+    selected = ["Power-On Logo", "No Input Signal Warning", "Monitor Status"];
     result = this.selected;
     size = 5;
     mode = ModeType.button;
