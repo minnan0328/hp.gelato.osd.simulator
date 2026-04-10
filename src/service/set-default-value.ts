@@ -1,4 +1,5 @@
 import { useMenuStore } from '@/stores/index';
+import { computed } from 'vue';
 import { monitorScreenResult } from '@/service/monitor-state-result';
 // utilities nodes
 import { OnNodes, OffNodes } from '@/models/class/_utilities';
@@ -49,16 +50,16 @@ const LanguageNodesEnum = new LanguageNodes();
 const DiagnosticPatternsNodesEnum = new DiagnosticPatternsNodes();
 const AccessibilityNodesEnum = new AccessibilityNodes();
 
-// 每次呼叫時即時從 store 取得，避免 reset 後引用過期
-function getBrightnessNode() { return menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key); }
-function getContrastNode() { return menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key); }
-function getRGBGainAdjustNode() { return menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key); }
-function getDynamicContrastNode() { return menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key); }
-function getMPRTNode() { return menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key); }
-function getAMDFreeSyncNode() { return menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key); }
-function getLanguageNode() { return menuStore.$state.menu.nodes.find(n => n.key == LanguageNodesEnum.key); }
-function getDiagnosticPatternsNode() { return menuStore.$state.management.nodes.find(n => n.key == DiagnosticPatternsNodesEnum.key); }
-function getAccessibilityNode() { return menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key); }
+// 使用 computed 即時從 store 取得，避免 reset 後引用過期
+const brightnessNode = computed(() => menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
+const contrastNode = computed(() => menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key));
+const RGBGainAdjustNode = computed(() => menuStore.$state.color.nodes.find(n => n.key == RGBGainAdjustNodesEnum.key));
+const dynamicContrastNode = computed(() => menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key));
+const MPRTNode = computed(() => menuStore.$state.gaming.nodes.find(n => n.key == MPRTNodesEnum.key));
+const AMDFreeSyncNode = computed(() => menuStore.$state.gaming.nodes.find(n => n.key == AmdFreeSyncNodesEnum.key));
+const languageNode = computed(() => menuStore.$state.menu.nodes.find(n => n.key == LanguageNodesEnum.key));
+const diagnosticPatternsNode = computed(() => menuStore.$state.management.nodes.find(n => n.key == DiagnosticPatternsNodesEnum.key));
+const accessibilityNode = computed(() => menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key));
 
 
 export function setBrightnessValue() {
@@ -66,26 +67,22 @@ export function setBrightnessValue() {
     menuStore.$state.information.nodes[2].result = menuStore.$state.color.result;
     const colorResult = menuStore.$state.color.nodes.find(n => n.result == menuStore.$state.color.result);
     
-    const brightnessNode = getBrightnessNode();
-    const contrastNode = getContrastNode();
-    const RGBGainAdjustNode = getRGBGainAdjustNode();
+    brightnessNode.value.result = colorResult.brightness;
+    brightnessNode.value.nodes[0].result = colorResult.brightness;
+    brightnessNode.value.selected = colorResult.brightness;
+    brightnessNode.value.nodes[0].selected = colorResult.brightness;
 
-    brightnessNode.result = colorResult.brightness;
-    brightnessNode.nodes[0].result = colorResult.brightness;
-    brightnessNode.selected = colorResult.brightness;
-    brightnessNode.nodes[0].selected = colorResult.brightness;
+    contrastNode.value.result = colorResult.contrast;
+    contrastNode.value.nodes[0].result = colorResult.contrast;
+    contrastNode.value.selected = colorResult.contrast;
+    contrastNode.value.nodes[0].selected = colorResult.contrast;
 
-    contrastNode.result = colorResult.contrast;
-    contrastNode.nodes[0].result = colorResult.contrast;
-    contrastNode.selected = colorResult.contrast;
-    contrastNode.nodes[0].selected = colorResult.contrast;
-
-    RGBGainAdjustNode.nodes![0].result = colorResult.rgb.r;
-    RGBGainAdjustNode.nodes![1].result = colorResult.rgb.g;
-    RGBGainAdjustNode.nodes![2].result = colorResult.rgb.b;
-    RGBGainAdjustNode.nodes![0].selected = colorResult.rgb.r;
-    RGBGainAdjustNode.nodes![1].selected = colorResult.rgb.g;
-    RGBGainAdjustNode.nodes![2].selected = colorResult.rgb.b;
+    RGBGainAdjustNode.value.nodes![0].result = colorResult.rgb.r;
+    RGBGainAdjustNode.value.nodes![1].result = colorResult.rgb.g;
+    RGBGainAdjustNode.value.nodes![2].result = colorResult.rgb.b;
+    RGBGainAdjustNode.value.nodes![0].selected = colorResult.rgb.r;
+    RGBGainAdjustNode.value.nodes![1].selected = colorResult.rgb.g;
+    RGBGainAdjustNode.value.nodes![2].selected = colorResult.rgb.b;
 
     // 當 color 是 HP Enhance+ 時 dynamic contrast 為 disable 並且關閉
     if(colorResult?.key == HPEnhancePlusNodesEnum.key) {
@@ -95,13 +92,12 @@ export function setBrightnessValue() {
 
 export function setDynamicContrastValue() {
     const colorResult = menuStore.$state.color.nodes.find(n => n.result == menuStore.$state.color.result);
-    const dynamicContrastNode = getDynamicContrastNode();
-    dynamicContrastNode.result = OffNodesEnum.result;
-    dynamicContrastNode.selected = OffNodesEnum.selected;
+    dynamicContrastNode.value.result = OffNodesEnum.result;
+    dynamicContrastNode.value.selected = OffNodesEnum.selected;
 
     // 當 color 是 HP Enhance+ 時 dynamic contrast 為 disable 並且關閉
     if(colorResult?.key == HPEnhancePlusNodesEnum.key) {
-        dynamicContrastNode.disabled = true;
+        dynamicContrastNode.value.disabled = true;
     }
 
 }
@@ -112,18 +108,15 @@ export function resetBrightnessContrastValue() {
 
     if (!originalColorNodes || !colorResult) return;
 
-    const brightnessNode = getBrightnessNode();
-    const contrastNode = getContrastNode();
+    brightnessNode.value.result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.value.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.value.selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
+    brightnessNode.value.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
 
-    brightnessNode.result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
-    brightnessNode.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.brightness));
-    brightnessNode.selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
-    brightnessNode.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.brightness));
-
-    contrastNode.selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
-    contrastNode.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
-    contrastNode.result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
-    contrastNode.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.value.selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.value.nodes[0].selected = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.value.result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
+    contrastNode.value.nodes[0].result = JSON.parse(JSON.stringify(originalColorNodes.contrast));
 
     colorResult.brightness = JSON.parse(JSON.stringify(originalColorNodes.brightness));
     colorResult.contrast = JSON.parse(JSON.stringify(originalColorNodes.contrast));
@@ -163,31 +156,24 @@ export function resetInputValue() {
 }
 
 export function setGamingNodesStatus() {
-    const AMDFreeSyncNode = getAMDFreeSyncNode();
-    const dynamicContrastNode = getDynamicContrastNode();
-    const MPRTNode = getMPRTNode();
-    if(AMDFreeSyncNode && dynamicContrastNode && MPRTNode) {
+    if(AMDFreeSyncNode.value && dynamicContrastNode.value && MPRTNode.value) {
         // 當 AMD FreeSync 或 Dynamic Contrast 為 On 時 MPRT 為 disable，反之則為 enable
-        MPRTNode.disabled = (AMDFreeSyncNode.result == OnNodesEnum.result || dynamicContrastNode.result == OnNodesEnum.result) ? true : false;
+        MPRTNode.value.disabled = (AMDFreeSyncNode.value.result == OnNodesEnum.result || dynamicContrastNode.value.result == OnNodesEnum.result) ? true : false;
     }
 }
 
 export function restoreSpecialPresets() {
-    const languageNode = getLanguageNode();
-    const accessibilityNode = getAccessibilityNode();
-    const diagnosticPatternsNode = getDiagnosticPatternsNode();
-
     // 恢復英文介面
-    languageNode.selected = 'English';
-    languageNode.result = 'English';
-    languageNode.page = 1;
+    languageNode.value.selected = 'English';
+    languageNode.value.result = 'English';
+    languageNode.value.page = 1;
     
     // 取消無障礙模式
-    accessibilityNode.selected = OffNodesEnum.selected;
-    accessibilityNode.result = OffNodesEnum.result;
+    accessibilityNode.value.selected = OffNodesEnum.selected;
+    accessibilityNode.value.result = OffNodesEnum.result;
 
     // 關閉診斷模式
-    diagnosticPatternsNode.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
-    diagnosticPatternsNode.result = DiagnosticPatternsNodesEnum.nodes[0].result;
+    diagnosticPatternsNode.value.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;
+    diagnosticPatternsNode.value.result = DiagnosticPatternsNodesEnum.nodes[0].result;
     monitorScreenResult.value.diagnosticPatterns.close();
 }
