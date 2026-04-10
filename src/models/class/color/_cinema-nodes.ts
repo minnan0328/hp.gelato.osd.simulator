@@ -8,7 +8,7 @@ export default class CinemaNodes extends DefaultNodes implements Nodes {
     selected = "Cinema";
     result = "Cinema";
     brightness = 20;
-    rgb = { r: 255, g: 255, b: 255 };
+    rgb = { r: 255, g: 240, b: 255 };
     livePreview = true;
     mode = ModeType.radio;
     size = 6;

@@ -4,7 +4,7 @@ import { DefaultNodes, ResetNodes, BackNodes, ExitNodes } from '../_utilities';
 import FPSNodes from './_fps-nodes';
 import RPGNodes from './_rpg-nodes';
 import RTSNodes from './_rts-nodes';
-import sRGBNodes from './_sRGB-nodes';
+import StandardNodes from './_ standard-nodes';
 import NativeNodes from './_native-nodes';
 import CinemaNodes from './_cinema-nodes';
 import NightNodes from './_night-nodes';
@@ -17,7 +17,7 @@ const ExitNodesEnum = new ExitNodes();
 const FPSNodesEnum = new FPSNodes();
 const RPGNodesEnum = new RPGNodes();
 const RTSNodesEnum = new RTSNodes();
-const sRGBNodesEnum = new sRGBNodes();
+const StandardNodesEnum = new StandardNodes();
 const NativeNodesEnum = new NativeNodes();
 const CinemaNodesEnum = new CinemaNodes();
 const NightNodesEnum = new NightNodes();
@@ -58,7 +58,7 @@ export default class Color extends DefaultNodes implements Nodes {
             parents: this.key
         },
         {
-            ...JSON.parse(JSON.stringify(sRGBNodesEnum)),
+            ...JSON.parse(JSON.stringify(StandardNodesEnum)),
             parents: this.key
         },
         {

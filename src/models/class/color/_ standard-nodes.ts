@@ -3,27 +3,27 @@ import { ModeType } from "@/types";
 import { DefaultNodes } from '../_utilities';
 
 const DefaultNodesEnum = new DefaultNodes();
-export default class sRGBNodes extends DefaultNodes implements Nodes {
-    key = "sRGB";
-    selected = "sRGB";
-    result = "sRGB";
+export default class StandardNodes extends DefaultNodes implements Nodes {
+    key = "Standard";
+    selected = "Standard";
+    result = "Standard";
     brightness = 52;
-    rgb = { r: 255, g: 255, b: 255 };
+    rgb = { r: 254, g: 240, b: 255 };
     livePreview = true;
     mode = ModeType.radio;
     size = 4;
     language = {
-        German: "sRGB",
-        SimplifiedChinese: "标准RGB",
-        TraditionalChinese: "標準RGB",
-        English: "sRGB",
-        Español: "sRGB",
-        French: "sRGB",
-        Italian: "sRGB",
-        Japanese: "sRGB",
-        Nederlands: "sRGB",
-        BrazilianPortuguese: "sRGB",
-        Russian: "sRGB"
+        German: "Standard",
+        SimplifiedChinese: "标准",
+        TraditionalChinese: "標準",
+        English: "Standard",
+        Español: "Estándar",
+        French: "Standard",
+        Italian: "Standard",
+        Japanese: "標準",
+        Nederlands: "Standaard",
+        BrazilianPortuguese: "Padrão",
+        Russian: "Стандарт"
     };
     nodes = [
         {

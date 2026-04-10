@@ -176,9 +176,10 @@ import {
 
 import { 
     setBrightnessValue, setDynamicContrastValue,
-    resetBrightnessContrastValue, resetColorRGB, 
+    resetBrightnessContrastValue, 
     resetInputValue, setGamingNodesStatus,
-    restoreSpecialPresets
+    restoreSpecialPresets,
+    resetColor
 } from '@/service/set-default-value';
 
 const MenusDefaultEnum = new MenusDefaultModel();
@@ -255,6 +256,7 @@ const messageTimers = computed(()=> menuStore.$state.gaming.nodes.find(n => n.ke
 const responseRite = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == ResponseRiteNodesEnum.key));
 // images node enum
 const brightness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
+const contrast = computed(()=> menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key));
 const assignButtons = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == AssignButtonsNodesEnum.key));
 
 // color node enum
@@ -1275,6 +1277,11 @@ function handlerRangeValue(step: string) {
                 colorResult.brightness = nodes.result as number;
             }
 
+            if(previousNodes.key == ContrastNodesEnum.key) {
+                const colorResult = color.value!.nodes.find((n: Nodes) => n.result === color.value!.result);
+                colorResult.contrast = nodes.result as number;
+            }
+
             if(previousNodes.key == RGBGainAdjustNodesEnum.key) {
                 const colorResult = color.value!.nodes.find((n: Nodes) => n.selected == color.value!.selected);
                 colorResult.rgb.r = previousNodes.nodes![0]!.result as number;
@@ -1772,9 +1779,9 @@ function handleResetAction() {
     }
 
     if(menuState.menuPanel?.key == ColorNodesEnum.key) {
-        resetColorRGB();
-        return
-    };
+        resetColor();
+        return;
+    }
 
     const resetPanel: { [key: number]: Nodes | null } = {
         2: menuState.menuPanel,
@@ -1800,6 +1807,7 @@ function handleResetAction() {
 
     if(menuState.menuPanel?.key == ImageNodesEnum.key) {
         resetBrightnessContrastValue();
+        setDynamicContrastValue();
     };
 
     // 重置 MessageTimers 本地計時器狀態

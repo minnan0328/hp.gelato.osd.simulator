@@ -8,7 +8,7 @@ export default class RTSNodes extends DefaultNodes implements Nodes {
     selected = "RTS";
     result = "RTS";
     brightness = 68;
-    rgb = { r: 255, g: 255, b: 255 };
+    rgb = { r: 255, g: 241, b: 255 };
     livePreview = true;
     mode = ModeType.radio;
     size = 3;
