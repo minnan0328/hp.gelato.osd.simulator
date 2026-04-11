@@ -27,13 +27,13 @@
                         <div class="wrapper" id="monitor-wrapper">
                             <div class="power-light" v-if="openMonitor && monitorResult.powerLED"></div>
     
-                            <monitorScreen v-if="openMonitor" v-model:openMonitor="openMonitor"
+                            <monitorScreen v-if="openMonitor && childMenusComponentRef" v-model:openMonitor="openMonitor"
                                 v-model:screenInitial="screenInitial"
                                 v-model:showMonitorStatus="showMonitorStatus"
                                 v-model:showScreen="showScreen"
                                 v-model:startUpFinish="startUpFinish"
                                 v-model:showGamingSettingText="showGamingSettingText"
-                                v-model:showGamingCrosshair="showGamingCrosshair">
+                                v-model:openControllerMenus="childMenusComponentRef.openControllerMenus">
                             </monitorScreen>
 
                             <div class="menu-buttons-image">
@@ -51,7 +51,6 @@
                                 v-model:showScreen="showScreen"
                                 v-model:showMonitorStatus="showMonitorStatus"
                                 v-model:showGamingSettingText="showGamingSettingText"
-                                v-model:showGamingCrosshair="showGamingCrosshair"
                                 ref="childMenusComponentRef">
                                 <template v-slot:openMonitor>
                                     <button class="controller-btn open-btn" @click="handleMonitor"></button>
@@ -75,7 +74,6 @@ import menus from '@/views/home/_menus/menus.vue';
 import { monitorResult, menuStateResult } from '@/service/monitor-state-result';
 import config from '@/config/config';
 
-
 const menuStore = useMenuStore();
 
 const tabs = reactive([
@@ -97,6 +95,7 @@ function selectInput(tab: Nodes) {
         menuStore.$state.input.selected = selectedTab.value.selected as string;
         menuStore.$state.input.result = selectedTab.value.result as string;
 
+        // 因為目前 input 的選項只有三個，所以直接寫死第四個節點的選項，之後如果有增加 input 的選項再調整
         menuStore.$state.input.nodes[4].nodes[1].selected = `${menuStore.$state.input.selected} ${menuStore.$state.input.nodes[4].key}`;
         menuStore.$state.input.nodes[4].nodes[1].result = `${menuStore.$state.input.result} ${menuStore.$state.input.nodes[4].key}`;
     }
@@ -109,13 +108,12 @@ const screenInitial = ref(false);
 const showMonitorStatus = ref(false);
 const showScreen = ref(false);
 const startUpFinish = ref(false);
-const childMenusComponentRef = ref(null);
+const childMenusComponentRef = ref<InstanceType<typeof menus> | null>(null);
 
 // 1. gaming 的 refreshRate 及 messageTimers 啟用時候
 // 2. 1 啟用時，啟動 menu 不顯示
 // 3. 1 不啟用時，不顯示
 const showGamingSettingText = ref(true);
-const showGamingCrosshair = ref(true);
 
 function handleMonitor() {
     openMonitor.value = !openMonitor.value;
@@ -155,7 +153,7 @@ function restartScreen() {
 
 
 provide<HomeEvent>("homeEvent", {
-    restartScreen
+    restartScreen: restartScreen
 });
 
 

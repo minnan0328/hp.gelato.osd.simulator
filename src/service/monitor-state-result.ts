@@ -26,7 +26,7 @@ import ImageScalingNodes from '@/models/class/image/_image-scaling-nodes';
 // color nodes
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 // input nodes
-import DisplayProtModeNodes from '@/models/class/input/_ display-port-mode-nodes';
+import DisplayProtModeNodes from '@/models/class/input/_display-port-mode-nodes';
 import AutoSwitchInputNodes from '@/models/class/input/_auto-switch-input-nodes';
 // menu nodes
 import MenuPositionNodes from '@/models/class/menu/_menu-position-nodes';
@@ -380,7 +380,15 @@ export const gamingResult = computed(() => {
             enabled: refreshRate.value?.result == OnNodesEnum.result,
             color: refreshRate.value?.nodes[2].result,
             location: refreshRate.value?.nodes[3].result,
-            rate: 120
+            rate: 120,
+            enabledChildNodes: function() {
+                refreshRate.value.nodes[2]!.disabled = false;
+                refreshRate.value.nodes[3]!.disabled = false;
+            },
+            disabledChildNodes: function() {
+                refreshRate.value.nodes[2]!.disabled = true;
+                refreshRate.value.nodes[3]!.disabled = true;
+            }
         },
         // 取得訊息顯示時間
         messageTimers: {
@@ -402,6 +410,13 @@ export const gamingResult = computed(() => {
             color: messageTimers.value.nodes[6].result,
             location: messageTimers.value.nodes[7].result,
             message: messageTimers.value.nodes![5].nodes!.find((n: Nodes) => n.result == messageTimers.value.nodes![5].result),
+            enabledChildNodes: function() {
+                messageTimers.value.nodes[3]!.disabled = false;
+                messageTimers.value.nodes[4]!.disabled = false;
+                messageTimers.value.nodes[5]!.disabled = false;
+                messageTimers.value.nodes[6]!.disabled = false;
+                messageTimers.value.nodes[7]!.disabled = false;
+            },
             clearInterval: function() {
                 if (MessageTimersEnum.intervalId !== null) {
                     clearInterval(MessageTimersEnum.intervalId);
@@ -415,6 +430,7 @@ export const gamingResult = computed(() => {
                         [SpeedrunTimerNodesEnum.result]: 1,
                         [CountdownTimerNodesEnum.result]: -1
                     };
+
                     MessageTimersEnum.intervalId = setInterval(() => {
 
                         if(this.result <= CountdownTimerNodesEnum.result && this.timer[this.result] == 0) {
@@ -459,7 +475,17 @@ export const gamingResult = computed(() => {
             },
             set start(value: boolean) {
                 CrosshairEnum.start = value;
-            } 
+            },
+            enabledChildNodes: function() {
+                crosshair.value.nodes[2]!.disabled = false;
+                crosshair.value.nodes[3]!.disabled = false;
+                crosshair.value.nodes[4]!.disabled = false;
+            },
+            disabledChildNodes: function() {
+                crosshair.value.nodes[2]!.disabled = true;
+                crosshair.value.nodes[3]!.disabled = true;
+                crosshair.value.nodes[4]!.disabled = true;
+            }
         }
     }
 });

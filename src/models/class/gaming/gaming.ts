@@ -2,7 +2,7 @@ import { ModeType } from "@/types";
 import type { Nodes } from "@/types";
 import { DefaultNodes, ResetNodes, BackNodes } from '../_utilities';
 import AndFreeSyncNode from './_amd-free-sync-nodes';
-import ResponseTimeNodes from './_response-rime-nodes';
+import ResponseTimeNodes from './_response-time-nodes';
 import RefreshRateNodes from './_refresh-rate-nodes';
 import CrosshairNodes from './_crosshair/crosshair-nodes';
 import MessageTimersNodes from './_message-timers/message-timers-nodes';

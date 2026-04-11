@@ -3,7 +3,7 @@ import { ModeType } from '@/types';
 import { DefaultNodes, ResetNodes, BackNodes, ExitNodes, OnNodes, OffNodes } from '../_utilities';
 import AutoSwitchInputNodes from './_auto-switch-input-nodes';
 import DPHotPlugDetectionNodes from './_dp-hot-plug-detection-nodes';
-import DisplayPortModeNodes from './_ display-port-mode-nodes';
+import DisplayPortModeNodes from './_display-port-mode-nodes';
 import HDMICECNodes from './_hdml-cec-nodes';
 
 let AutoSwitchInputNodesEnum = new AutoSwitchInputNodes(); 

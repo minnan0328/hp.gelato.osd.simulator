@@ -137,12 +137,12 @@
                         
                         <customizeRadio
                             :currentNode="thirdNodes" :nodes="thirdSectionNodes"
-                            :previousNodes="secondarySectionNodes" :bottomLine="enabledBottomLine(secondarySectionNodes)">
+                            :previousNodes="secondarySectionNodes" :bottomLine="enabledBottomLine(secondarySectionNodes) || secondarySectionNodes?.key == crosshairNodesEnum.key">
                         </customizeRadio>
                         
                         <customizeCheckbox
                             :currentNode="thirdNodes" :nodes="thirdSectionNodes"
-                            :previousNodes="secondarySectionNodes" :bottomLine="enabledBottomLine(secondarySectionNodes)">
+                            :previousNodes="secondarySectionNodes" :bottomLine="enabledBottomLine(secondarySectionNodes) || secondarySectionNodes?.key == configureNodesEnum.key">
                         </customizeCheckbox>
 
                         <!-- 設定狀態 -->
@@ -215,11 +215,13 @@ import svgIcon from './_components/_icon-svg.vue';
 import ImageScalingNodes from '@/models/class/image/_image-scaling-nodes';
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 import ConfigureNodes from '@/models/class/gaming/_crosshair/_configure-nodes';
+import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
 import InputNodes from '@/models/class/input/input';
 
 const imageScalingNodesEnum = new ImageScalingNodes();
 const rgbGainAdjustNodesEnum = new RGBGainAdjustNodes();
 const configureNodesEnum = new ConfigureNodes();
+const crosshairNodesEnum = new CrosshairNodes();
 const inputNodesEnum = new InputNodes();
 
 const props = defineProps({
@@ -252,7 +254,7 @@ const isTwoColumns = computed(() => {
 });
 
 function enabledBottomLine(node: Nodes) {
-    const enabledNodes = ["ResetTimer", "MessageTimers", "Configure", "option5bmp", "RefreshRate", "MultiMonitorAlign"];
+    const enabledNodes = ["ResetTimer", "MessageTimers", "option5bmp", "RefreshRate", "MultiMonitorAlign"];
 
     return enabledNodes.includes(node.key) && isEnableNode(node);
 }

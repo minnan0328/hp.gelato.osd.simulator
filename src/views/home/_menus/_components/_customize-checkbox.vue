@@ -1,5 +1,6 @@
 <template>
-    <div v-if="currentNode.mode == ModeType.checkBox" :class="['customize-checkbox ', { 'border-bottom-line': isLastNode(currentNode, previousNodes) }]">
+    <div v-if="currentNode.mode == ModeType.checkBox"
+        :class="['customize-checkbox', { 'border-bottom-line': isLastNode(currentNode, previousNodes) }]">
         <div :class="['checkbox item', { selected: nodes?.key == currentNode.key, disabled: currentNode.disabled }]">
             <div :class="['box', { checked: isChecked(currentNode), disabled: currentNode.disabled }]"></div>
             <svgIcon v-if="currentNode.useIcon"  :node="currentNode"></svgIcon>
@@ -34,7 +35,6 @@ const props = defineProps({
     },
     disabled: {
         disabled: Boolean,
-        required: false,
         default: false
     }
 });

@@ -15,25 +15,25 @@
         <img :src="monitorScreenResult.image" alt="">
 
         <span :class="['setting-info-value',
-                gamingResult.refreshRate.key, 
-                gamingResult.refreshRate.color,
-                gamingResult.refreshRate.location
-            ]"
-            v-if="!showMonitorStatus && showGamingSettingText && gamingResult.refreshRate.enabled"
-            v-text="gamingResult.refreshRate.rate">
-        </span>
-
-        <span :class="['setting-info-value',
                 gamingResult.messageTimers.key,
                 gamingResult.messageTimers.color,
                 gamingResult.messageTimers.location
             ]"
-            v-else-if="!showMonitorStatus && showGamingSettingText && gamingResult.messageTimers.enabled"
+            v-if="!showMonitorStatus && !openControllerMenus && showGamingSettingText && gamingResult.messageTimers.enabled"
             v-text="toDisplayTimeFormat(gamingResult.messageTimers.timer[gamingResult.messageTimers.result] as number)">
         </span>
 
+        <span :class="['setting-info-value',
+                gamingResult.refreshRate.key, 
+                gamingResult.refreshRate.color,
+                gamingResult.refreshRate.location
+            ]"
+            v-if="!showMonitorStatus && !openControllerMenus && showGamingSettingText && gamingResult.refreshRate.enabled"
+            v-text="gamingResult.refreshRate.rate">
+        </span>
+
         <!-- 十字準星 -->
-        <div class="crosshair" v-if="!showMonitorStatus && showGamingCrosshair && gamingResult.crosshairLocation.enabled">
+        <div class="crosshair" v-if="!showMonitorStatus && gamingResult.crosshairLocation.start && gamingResult.crosshairLocation.enabled">
             <div class="combination">
                 <iconSvg 
                     v-for="(node, index) in CrosshairConfigureNodesEnum.nodes" :key="index"
@@ -121,7 +121,7 @@ const props = defineProps({
         type: Boolean,
         default: false  
     },
-    showGamingCrosshair: {
+    openControllerMenus: {
         type: Boolean,
         default: false  
     }

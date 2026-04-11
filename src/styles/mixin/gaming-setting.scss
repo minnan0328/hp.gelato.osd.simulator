@@ -44,10 +44,19 @@
             fill: $white;
         }
 
+        &:deep(svg circle) {
+            stroke: $text-red;
+        }
+
         svg {
             rect,
             path {
                 fill: $white;
+
+            }
+
+            circle {
+                stroke: $text-red;
             }
         }
     }
@@ -55,10 +64,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-red;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-red;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-red;
+            }
+
+            circle {
+                stroke: $text-red;
             }
         }
     }
@@ -66,10 +84,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-green;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-green;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-green;
+            }
+
+            circle {
+                stroke: $text-green;
             }
         }
     }
@@ -77,6 +104,7 @@
         &:deep(svg rect, svg path) {
             fill: $text-blue;
         }
+
         rect,
         path {
             fill: $text-blue;
@@ -86,10 +114,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-yellow;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-yellow;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-yellow;
+            }
+
+            circle {
+                stroke: $text-yellow;
             }
         }
     }
@@ -97,10 +134,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-purple;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-purple;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-purple;
+            }
+
+            circle {
+                stroke: $text-purple;
             }
         }
     }
@@ -108,10 +154,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-light-blue;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-light-blue;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-light-blue;
+            }
+
+            circle {
+                stroke: $text-light-blue;
             }
         }
     }
@@ -119,10 +174,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-orange;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-orange;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-orange;
+            }
+
+            circle {
+                stroke: $text-orange;
             }
         }
     }
@@ -130,10 +194,19 @@
         &:deep(svg rect, svg path) {
             fill: $text-black;
         }
+
+        &:deep(svg circle) {
+            stroke: $text-black;
+        }
+
         svg {
             rect,
             path {
                 fill: $text-black;
+            }
+
+            circle {
+                stroke: $text-black;
             }
         }
     }
@@ -145,6 +218,10 @@
         left: 16px;
         bottom: initial;
         right: initial;
+
+        &.RefreshRate {
+            top: 52px;
+        }
     }
 
     &.Top-Right {
@@ -152,6 +229,10 @@
         right: 16px;
         bottom: unset;
         left: unset;
+
+        &.RefreshRate {
+            top: 52px;
+        }
     }
 
     &.Bottom-Left {
@@ -159,6 +240,10 @@
         left: 16px;
         top: initial;
         right: initial;
+
+        &.RefreshRate {
+            bottom: 52px;
+        }
     }
 
     &.Bottom-Right {
@@ -166,5 +251,9 @@
         right: 16px;
         top: initial;
         left: initial;
+
+        &.RefreshRate {
+            bottom: 52px;
+        }
     }
 }

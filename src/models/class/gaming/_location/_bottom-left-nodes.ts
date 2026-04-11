@@ -8,7 +8,6 @@ export default class BottomLeftNodes extends DefaultNodes implements Nodes {
     result = "Bottom-Left";
     size = 3;
     mode = ModeType.radio;
-    disabled = true;
     language = {
         German: "Unten Links",
         SimplifiedChinese: "左下",

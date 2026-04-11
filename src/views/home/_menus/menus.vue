@@ -114,7 +114,7 @@ import iconPrevious from '@/assets/icons/icon-previous.svg';
 import iconInformation from '@/assets/icons/icon-information.svg';
 import iconClock from '@/assets/icons/icon-clock.svg';
 import iconCrosshair from '@/assets/icons/icon-crosshair.svg';
-import iconFps from '@/assets/icons/icon-fps.svg';
+import iconHz from '@/assets/icons/icon-hz.svg';
 
 import PowerConfirmChangeNodes from '@/models/class/power/message/confirm-change';
 
@@ -145,7 +145,6 @@ import AutoSleepModeNodes from '@/models/class/power/_auto-sleep-mode-nodes';
 import InputNodes from '@/models/class/input/input';
 
 // gaming nodes
-import ResponseRiteNodes from '@/models/class/gaming/_response-rime-nodes';
 import AMDFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
 import RefreshRateNodes from '@/models/class/gaming/_refresh-rate-nodes';
 import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
@@ -212,7 +211,6 @@ const InputNodesEnum = new InputNodes();
 
 // gaming nodes enum
 const GamingNodesEnum = new GamingNodes();
-const ResponseRiteNodesEnum = new ResponseRiteNodes();
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
 const RefreshRateNodesEnum = new RefreshRateNodes();
 const CrosshairNodesEnum = new CrosshairNodes();
@@ -253,10 +251,8 @@ const menuStore = useMenuStore();
 const refreshRate = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == RefreshRateNodesEnum.key));
 const crosshair = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == CrosshairNodesEnum.key));
 const messageTimers = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == MessageTimersNodesEnum.key));
-const responseRite = computed(()=> menuStore.$state.gaming.nodes.find(n => n.key == ResponseRiteNodesEnum.key));
 // images node enum
 const brightness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BrightnessNodesEnum.key));
-const contrast = computed(()=> menuStore.$state.image.nodes.find(n => n.key == ContrastNodesEnum.key));
 const assignButtons = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == AssignButtonsNodesEnum.key));
 
 // color node enum
@@ -274,7 +270,6 @@ const props = defineProps({
     showScreen: { type: Boolean, default: false },
     showMonitorStatus: { type: Boolean, default: false },
     showGamingSettingText: { type: Boolean, default: false },
-    showGamingCrosshair: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([
@@ -282,7 +277,6 @@ const emit = defineEmits([
     'update:showMonitorStatus',
     'update:startUpFinish',
     'update:showGamingSettingText',
-    'update:showGamingCrosshair',
 ]);
 
 const menuTimeOutIntervalId = ref<number | null>(null);
@@ -393,7 +387,7 @@ const assignMenus = computed(() => {
         },
         [AssignRefreshRateNodesEnum.key]: {
             key: AssignRefreshRateNodesEnum.key,
-            icon: iconFps,
+            icon: iconHz,
             node: refreshRate.value
         },
         [AssignCrosshairNodesEnum.key]: {
@@ -494,6 +488,30 @@ function handlerOpenAllMenu() {
 function handleAssignButton(key: string) {
     if(key == AssignEmptyNodesEnum.key) {
         return;
+    }
+
+    if(key == AssignMessageTimersNodesEnum.key) {
+        openControllerMenus.value = false;
+        gamingResult.value.messageTimers.start = !gamingResult.value.messageTimers.start;
+        messageTimers.value.result = SpeedrunTimerNodesEnum.result;
+        messageTimers.value.selected = SpeedrunTimerNodesEnum.selected;
+        gamingResult.value.messageTimers.implement();
+        gamingResult.value.messageTimers.enabledChildNodes();
+        return
+    }
+
+    if(key == AssignRefreshRateNodesEnum.key) {
+        openControllerMenus.value = false;
+        refreshRate.value.result = refreshRate.value.result == OnNodesEnum.result ? OffNodesEnum.result : OnNodesEnum.result;
+        refreshRate.value.result == OnNodesEnum.result ? gamingResult.value.refreshRate.enabledChildNodes() : gamingResult.value.refreshRate.disabledChildNodes();
+        return
+    }
+
+    if(key == AssignCrosshairNodesEnum.key) {
+        crosshair.value.result = crosshair.value.result == OnNodesEnum.result ? OffNodesEnum.result : OnNodesEnum.result;
+        gamingResult.value.crosshairLocation.start = crosshair.value.result == OnNodesEnum.result ? true : false;
+        crosshair.value.result == OnNodesEnum.result ? gamingResult.value.crosshairLocation.enabledChildNodes() : gamingResult.value.crosshairLocation.disabledChildNodes();
+        return
     }
 
     menuState.menuPanel = null;
@@ -1559,7 +1577,7 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
         const keyHandlers: { [key: string]: () => void } = {
             [LanguageNodesEnum.key]: () => reopenMenu(),
             [InputNodesEnum.key]: () => {
-                homeEvent.restartScreen!();
+                (homeEvent.restartScreen as () => void)();
                 handlerClose();
             },
             [ColorNodesEnum.key]: () => setBrightnessValue(),
@@ -1567,17 +1585,11 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
             [RefreshRateNodesEnum.key]: () => {
                 const actions = {
                     [OffNodesEnum.key]: () => {
-                        previousNodes.nodes![2]!.disabled = true;
-                        previousNodes.nodes![3]!.disabled = true;
-                        previousNodes.nodes![2]?.nodes?.forEach(n => n.disabled = true);
-                        previousNodes.nodes![3]?.nodes?.forEach(n => n.disabled = true);
+                        gamingResult.value.refreshRate.disabledChildNodes();
 
                     },
                     [OnNodesEnum.key]: () => {
-                        previousNodes.nodes![2]!.disabled = false;
-                        previousNodes.nodes![3]!.disabled = false;
-                        previousNodes.nodes![2]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![3]?.nodes?.forEach(n => n.disabled = false);
+                        gamingResult.value.refreshRate.enabledChildNodes();
                     }
                 };
 
@@ -1589,19 +1601,11 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
             [CrosshairNodesEnum.key]: () => {
                 const actions = {
                     [OffNodesEnum.key]: () => {
-                        previousNodes.nodes![2]!.disabled = true;
-                        previousNodes.nodes![3]!.disabled = true;
-                        previousNodes.nodes![4]!.disabled = true;
-                        previousNodes.nodes![2]?.nodes?.forEach(n => n.disabled = true);
-                        previousNodes.nodes![3]?.nodes?.forEach(n => n.disabled = true);
-                        emit("update:showGamingCrosshair", false);
+                        gamingResult.value.crosshairLocation.start = false;
+                        gamingResult.value.crosshairLocation.disabledChildNodes();
                     },
                     [OnNodesEnum.key]: () => {
-                        previousNodes.nodes![2]!.disabled = false;
-                        previousNodes.nodes![3]!.disabled = false;
-                        previousNodes.nodes![4]!.disabled = false;
-                        previousNodes.nodes![2]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![3]?.nodes?.forEach(n => n.disabled = false);
+                        gamingResult.value.crosshairLocation.enabledChildNodes();
                     }
                 };
 
@@ -1627,38 +1631,16 @@ function saveNodesValue(nodes: Nodes, previousNodes: Nodes, currentPanelNumber =
                     },
                     [SpeedrunTimerNodesEnum.key]: () => {
                         gamingResult.value.messageTimers.start = false;
-
-                        responseRite.value!.selected = OffNodesEnum.selected;
-                        responseRite.value!.result = OffNodesEnum.result;
-                        previousNodes.nodes![3]!.disabled = false;
-                        previousNodes.nodes![4]!.disabled = false;
-                        previousNodes.nodes![5]!.disabled = false;
-                        previousNodes.nodes![6]!.disabled = false;
-                        previousNodes.nodes![7]!.disabled = false;
-
-                        previousNodes.nodes![5]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![6]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![7]?.nodes?.forEach(n => n.disabled = false);
+                        gamingResult.value.messageTimers.enabledChildNodes();
                     },
                     [CountdownTimerNodesEnum.key]: () => {
                         gamingResult.value.messageTimers.start = false;
-
-                        responseRite.value!.selected = OffNodesEnum.selected;
-                        responseRite.value!.result = OffNodesEnum.result;
-                        previousNodes.nodes![3]!.disabled = false;
-                        previousNodes.nodes![4]!.disabled = false;
-                        previousNodes.nodes![5]!.disabled = false;
-                        previousNodes.nodes![6]!.disabled = false;
-                        previousNodes.nodes![7]!.disabled = false;
-
-                        previousNodes.nodes![5]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![6]?.nodes?.forEach(n => n.disabled = false);
-                        previousNodes.nodes![7]?.nodes?.forEach(n => n.disabled = false);
+                        gamingResult.value.messageTimers.enabledChildNodes();
                     },
                     // 當為訊息時間器時，啟動或暫停
                     [StartStopNodesEnum.key]: () => {
                         gamingResult.value.messageTimers.start = !gamingResult.value.messageTimers.start;
-                        gamingResult.value.messageTimers.implement(()=> handlerClose());
+                        gamingResult.value.messageTimers.implement();
                     },
                     // 當為訊息時間器時，重設預設值
                     [ResetTimerNodesEnum.key]: () => {
@@ -1916,20 +1898,18 @@ function handleCrosshairLocationAction() {
             openAllMenu.value = false;
             menuState.selectedMenus = "openAllMenu";
             gamingResult.value.crosshairLocation.start = true;
-            emit("update:showGamingCrosshair", true);
+
         };
 
         if(openAssignMenu.value) {
             openAssignMenu.value = false;
             menuState.selectedMenus = "openAssignMenu";
             gamingResult.value.crosshairLocation.start = true;
-            emit("update:showGamingCrosshair", true);
         };
     }
 
     else if(gamingResult.value.crosshairLocation.enabled && gamingResult.value.crosshairLocation.start) {
         gamingResult.value.crosshairLocation.start = false;
-        emit("update:showGamingCrosshair", false);
         restoreSelectedMenu();
     }
 }
@@ -2001,7 +1981,6 @@ function handlerClose() {
 
     // 當關閉 menu 開啟
     emit("update:showGamingSettingText", true);
-    emit("update:showGamingCrosshair", true);
 
     menuState.menuPanel = null;
     menuState.secondPanel = null;
@@ -2026,7 +2005,7 @@ function handlerClose() {
 };
 
 // 開放給 home 使用
-defineExpose({ handlerClose });
+defineExpose({ handlerClose, openControllerMenus });
 
 // 處理選單顯示時效
 function handlerMenuTimeout() {
