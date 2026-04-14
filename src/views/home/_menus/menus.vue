@@ -471,6 +471,7 @@ function handlerControllerMenus() {
     // 已完成啟動或剛剛設為完成啟動時，開啟控制選單
     if (props.startUpFinish || (!props.startUpFinish && props.showMonitorStatus)) {
         openControllerMenus.value = true;
+        gamingResult.value.crosshairLocation.start = false;
     }
 }
 
@@ -508,6 +509,7 @@ function handleAssignButton(key: string) {
     }
 
     if(key == AssignCrosshairNodesEnum.key) {
+        handlerClose();
         crosshair.value.result = crosshair.value.result == OnNodesEnum.result ? OffNodesEnum.result : OnNodesEnum.result;
         gamingResult.value.crosshairLocation.start = crosshair.value.result == OnNodesEnum.result ? true : false;
         crosshair.value.result == OnNodesEnum.result ? gamingResult.value.crosshairLocation.enabledChildNodes() : gamingResult.value.crosshairLocation.disabledChildNodes();
@@ -544,7 +546,7 @@ function selectedMenuPanel(nodes: Nodes) {
 
 /* 控制選單按鈕組合列表 */
 // 是否啟用選單控制按鈕
-const isCrosshairLocationNodes = computed(() => gamingResult.value.crosshairLocation.enabled && gamingResult.value.crosshairLocation.start && !openAllMenu.value && !openAssignMenu.value);
+const isCrosshairLocationNodes = computed(() => gamingResult.value.crosshairLocation.enabled && gamingResult.value.crosshairLocation.start && !openControllerMenus.value && !openAllMenu.value && !openAssignMenu.value);
 const isMenuControllerButton = computed(() => openControllerMenus.value && !openAllMenu.value && !openAssignMenu.value && !confirmState.openConfirm && !enabledDiagnosticPatternsFullScreen.value && !isCrosshairLocationNodes.value);
 
 const MenuControllerTypes: Record<string, ControllerButtonList> = reactive({
