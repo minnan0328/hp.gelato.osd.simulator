@@ -298,12 +298,12 @@ provide<HomeEvent>("homeEvent", {
         }
 
         .language-direction {
-            width: 260px;
+            width: 270px;
             height: max-content;
             position: absolute;
-            bottom: -132px;
-            right: 180px;
-            line-height: 1.33;
+            bottom: -95px;
+            right: 130px;
+            line-height: 1.2;
             
             .direction{
                 color: $text-red;
