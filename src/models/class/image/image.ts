@@ -7,6 +7,8 @@ import BrightnessNodes from './_brightness-nodes';
 import ContrastNodes from './_contrast-nodes';
 import DynamicContrastNodes from './_dynamic-contrast-nodes';
 import VideoLevelNodes from './_video-level-nodes';
+import BlackStretch from './_black-stretch-nodes';
+
 const ResetNodesEnum = new ResetNodes(); 
 const BackNodesEnum = new BackNodes();
 
@@ -16,10 +18,10 @@ const BrightnessNodesEnum = new BrightnessNodes();
 const ContrastNodesEnum = new ContrastNodes();
 const DynamicContrastNodesEnum = new DynamicContrastNodes();
 const VideoLevelNodesEnum = new VideoLevelNodes();
-
+const BlackStretchNodesEnum = new BlackStretch();
 export default class Image extends DefaultNodes implements Nodes {
     key = "Image";
-    size = 8;
+    size = 9;
     mode = ModeType.button;
     language = {
         German: "Bild",
@@ -48,6 +50,11 @@ export default class Image extends DefaultNodes implements Nodes {
         // 動態對比
         {
             ...JSON.parse(JSON.stringify(DynamicContrastNodesEnum)),
+            parents: this.key
+        },
+        // 黑色延展
+        {
+            ...JSON.parse(JSON.stringify(BlackStretchNodesEnum)),
             parents: this.key
         },
         // 視訊等級

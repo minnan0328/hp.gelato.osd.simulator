@@ -6,7 +6,7 @@ import { removeAndLowercase, minutesTolSeconds } from '@/service/service';
 // dialog function
 import dialog from '@/service/dialog/dialog';
 // utilities nodes
-import { OnNodes, OffNodes } from '@/models/class/_utilities';
+import { OnNodes, OffNodes, MediumNodes, LowNodes, HighNodes } from '@/models/class/_utilities';
 // gaming nodes
 import AMDFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
 import MPRTNodes from '@/models/class/gaming/_mprt-nodes';
@@ -23,6 +23,7 @@ import ContrastNodes from '@/models/class/image/_contrast-nodes';
 import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 import SharpnessNodes from '@/models/class/image/_sharpness-nodes';
 import ImageScalingNodes from '@/models/class/image/_image-scaling-nodes';
+import BlackStretchNodes from '@/models/class/image/_black-stretch-nodes';
 // color nodes
 import RGBGainAdjustNodes from '@/models/class/color/_RGB-gain-adjust-nodes';
 // input nodes
@@ -44,11 +45,17 @@ import PowerOnRecall from '@/models/class/power/_power-on-recall';
 
 // images and icons
 import screenOff from '@/assets/images/screen-off.jpg';
+import screenLow from '@/assets/images/screen-low.jpg';
+import screenMedium from '@/assets/images/screen-medium.jpg';
+import screenHigh from '@/assets/images/screen-high.jpg';
 import iconClock from '@/assets/icons/icon-clock.svg';
 
 const menuStore = useMenuStore();
 const OnNodesEnum = new OnNodes();
 const OffNodesEnum = new OffNodes();
+const LowNodesEnum = new LowNodes();
+const MediumNodesEnum = new MediumNodes();
+const HighNodesEnum = new HighNodes();
 
 // gaming nodes
 const AMDFreeSyncNodesEnum = new AMDFreeSyncNodes();
@@ -66,6 +73,7 @@ const ContrastNodesEnum = new ContrastNodes();
 const DynamicContrastNodesEnum = new DynamicContrastNodes();
 const ImageScalingNodesEnum = new ImageScalingNodes();
 const SharpnessNodesEnum = new SharpnessNodes();
+const BlackStretchNodesEnum = new BlackStretchNodes();
 // color nodes
 const RGBGainAdjustNodesEnum = new RGBGainAdjustNodes();
 // input nodes
@@ -102,6 +110,7 @@ const contrast = computed(()=> menuStore.$state.image.nodes.find(n => n.key == C
 const dynamicContrast = computed(()=> menuStore.$state.image.nodes.find(n => n.key == DynamicContrastNodesEnum.key));
 const sharpness = computed(()=> menuStore.$state.image.nodes.find(n => n.key == SharpnessNodesEnum.key));
 const imageScaling = computed(()=> menuStore.$state.image.nodes.find(n => n.key == ImageScalingNodesEnum.key));
+const blackStretch = computed(()=> menuStore.$state.image.nodes.find(n => n.key == BlackStretchNodesEnum.key));
 // input nodes
 const input = computed(()=> menuStore.$state.input);
 const autoSwitchInput = computed(()=> menuStore.$state.input.nodes.find(n => n.key == AutoSwitchInputNodesEnum.key));
@@ -114,7 +123,6 @@ const menuPosition = computed(()=> menuStore.$state.menu.nodes.find(n => n.key =
 const menuTransparency = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == MenuTransparencyNodesEnum.key));
 const menuTimeout = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == MenuTimeoutNodesEnum.key));
 const menuOSDMessage = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == MenuOSDMessageNodesEnum.key));
-// menu nodes
 const language = computed(()=> menuStore.$state.menu.nodes.find(n => n.key == LanguageNodesEnum.key));
 // management nodes
 const accessibility = computed(()=> menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key));
@@ -160,7 +168,6 @@ const CrosshairEnum = reactive({
 export const monitorScreenResult = computed(() => {
     return {
         // 取得桌面圖片
-        image: screenOff,
         monitorSize: {
             monitorWidth: `${monitorWidth}px`,
             monitorHeight: `${monitorHeight}px`
@@ -170,6 +177,8 @@ export const monitorScreenResult = computed(() => {
         // 取得對比值 Contrast (每次遞減/遞增 1% 對應 0.01，0% 時保留 0.3)
         contrast: 1 - Math.max(0.3, contrast.value.nodes[0].result / 100),
         RGB: toImageColor.value,
+        // 取得黑色延展 Black Stretch 對應亮度圖片
+        blackStretchImage: getBlackStretchImage.value,
         // 取得銳利度
         sharpness: getSharpness.value,
         // 取得診斷模式顏色
@@ -502,7 +511,6 @@ export const monitorResult = computed(() => {
     }
 });
 
-
 // 取讀銳利度
 const getSharpness = computed(() => {
     if(sharpness.value.result == sharpness.value.nodes![0].result) {
@@ -541,6 +549,19 @@ const toImageColor = computed(() => {
     }
 
     return RGB;
+});
+
+// 取得黑色延展 Black Stretch 對應亮度圖片
+const getBlackStretchImage = computed(() => {
+    if(blackStretch.value.result == LowNodesEnum.result) {
+        return screenLow
+    } else if(blackStretch.value.result == MediumNodesEnum.result) {
+        return screenMedium
+    } else if(blackStretch.value.result == HighNodesEnum.result) {
+        return screenHigh
+    } else {
+        return screenOff
+    }
 });
 
 // 取出括號中的數字，選單旋轉使用

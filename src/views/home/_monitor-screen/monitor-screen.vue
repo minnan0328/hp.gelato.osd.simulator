@@ -12,7 +12,7 @@
     <div :class="['screen', monitorScreenResult.imageScaling]"
         :style="{backgroundColor: `rgb(${monitorScreenResult.RGB.r}, ${monitorScreenResult.RGB.g}, ${monitorScreenResult.RGB.b})`}"
         v-if="showScreen && !monitorScreenResult.diagnosticPatterns.enabled && !gamingResult.multiMonitorAlign.enabled">
-        <img :src="monitorScreenResult.image" alt="">
+        <img :src="monitorScreenResult.blackStretchImage" alt="">
 
         <span :class="['setting-info-value',
                 gamingResult.messageTimers.key,
