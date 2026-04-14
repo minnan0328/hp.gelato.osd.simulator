@@ -1,6 +1,6 @@
 import { useMenuStore } from '@/stores/index';
 import { computed } from 'vue';
-import { monitorScreenResult } from '@/service/monitor-state-result';
+import { monitorScreenResult, gamingResult } from '@/service/monitor-state-result';
 // utilities nodes
 import { OnNodes, OffNodes } from '@/models/class/_utilities';
 // color nodes
@@ -12,6 +12,7 @@ import InputNodes from '@/models/class/input/input';
 // gaming nodes
 import MPRTNodes from '@/models/class/gaming/_mprt-nodes';
 import AmdFreeSyncNodes from '@/models/class/gaming/_amd-free-sync-nodes';
+import CrosshairNodes from '@/models/class/gaming/_crosshair/crosshair-nodes';
 // image nodes
 import DynamicContrastNodes from '@/models/class/image/_dynamic-contrast-nodes';
 import BrightnessNodes from '@/models/class/image/_brightness-nodes';
@@ -23,7 +24,6 @@ import LanguageNodes from '@/models/class/menu/_language-nodes';
 // managements nodes
 import DiagnosticPatternsNodes from '@/models/class/management/_diagnostic-patterns-nodes';
 import AccessibilityNodes from '@/models/class/management/_accessibility-nodes';
-import type { Nodes } from '@/types';
 
 const menuStore = useMenuStore();
 // utilities nodes
@@ -38,6 +38,7 @@ const InputNodesEnum = new InputNodes();
 // gaming nodes
 const MPRTNodesEnum = new MPRTNodes();
 const AmdFreeSyncNodesEnum = new AmdFreeSyncNodes();
+const CrosshairNodesEnum = new CrosshairNodes();
 // image nodes
 const DynamicContrastNodesEnum = new DynamicContrastNodes();
 const BrightnessNodesEnum = new BrightnessNodes();
@@ -60,6 +61,7 @@ const AMDFreeSyncNode = computed(() => menuStore.$state.gaming.nodes.find(n => n
 const languageNode = computed(() => menuStore.$state.menu.nodes.find(n => n.key == LanguageNodesEnum.key));
 const diagnosticPatternsNode = computed(() => menuStore.$state.management.nodes.find(n => n.key == DiagnosticPatternsNodesEnum.key));
 const accessibilityNode = computed(() => menuStore.$state.management.nodes.find(n => n.key == AccessibilityNodesEnum.key));
+const crosshair = computed(() => menuStore.$state.gaming.nodes.find(n => n.key == CrosshairNodesEnum.key));
 
 
 export function setBrightnessValue() {
@@ -171,6 +173,9 @@ export function restoreSpecialPresets() {
     // 取消無障礙模式
     accessibilityNode.value.selected = OffNodesEnum.selected;
     accessibilityNode.value.result = OffNodesEnum.result;
+
+    gamingResult.value.crosshairLocation.start = crosshair.value.result == OnNodesEnum.result ? true : false;
+    crosshair.value.result == OnNodesEnum.result ? gamingResult.value.crosshairLocation.enabledChildNodes() : gamingResult.value.crosshairLocation.disabledChildNodes();
 
     // 關閉診斷模式
     diagnosticPatternsNode.value.selected = DiagnosticPatternsNodesEnum.nodes[0].selected;

@@ -504,6 +504,7 @@ function handleAssignButton(key: string) {
     if(key == AssignRefreshRateNodesEnum.key) {
         openControllerMenus.value = false;
         refreshRate.value.result = refreshRate.value.result == OnNodesEnum.result ? OffNodesEnum.result : OnNodesEnum.result;
+        refreshRate.value.selected = refreshRate.value.selected == OnNodesEnum.selected ? OffNodesEnum.selected : OnNodesEnum.selected;
         refreshRate.value.result == OnNodesEnum.result ? gamingResult.value.refreshRate.enabledChildNodes() : gamingResult.value.refreshRate.disabledChildNodes();
         return
     }
@@ -511,6 +512,7 @@ function handleAssignButton(key: string) {
     if(key == AssignCrosshairNodesEnum.key) {
         handlerClose();
         crosshair.value.result = crosshair.value.result == OnNodesEnum.result ? OffNodesEnum.result : OnNodesEnum.result;
+        crosshair.value.selected = crosshair.value.selected == OnNodesEnum.selected ? OffNodesEnum.selected : OnNodesEnum.selected; 
         gamingResult.value.crosshairLocation.start = crosshair.value.result == OnNodesEnum.result ? true : false;
         crosshair.value.result == OnNodesEnum.result ? gamingResult.value.crosshairLocation.enabledChildNodes() : gamingResult.value.crosshairLocation.disabledChildNodes();
         return
