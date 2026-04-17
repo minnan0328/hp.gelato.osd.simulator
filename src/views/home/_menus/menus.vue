@@ -2110,8 +2110,8 @@ function handlerMenuTimeout() {
         position: absolute;
         width: 42px;
         height: 42px;
-        bottom: -40px;
-        right: 83px;
+        bottom: -64px;
+        right: 84px;
 
         &:hover,
         &.show-guide {
@@ -2131,23 +2131,23 @@ function handlerMenuTimeout() {
 
         &.controller-btn-center {
             right: 93px;
-            bottom: 32px;
+            bottom: 24px;
         }
         &.controller-btn-top {
-            right: 93px;
-            bottom: 65px;
+            right: 92px;
+            bottom: 57px;
         }
         &.controller-btn-right {
-            right: 60px;
-            bottom: 32px;
+            right: 57px;
+            bottom: 26px;
         }
         &.controller-btn-left {
             right: 126px;
-            bottom: 32px;
+            bottom: 26px;
         }
         &.controller-btn-bottom {
-            right: 93px;
-            bottom: 0px;
+            right: 92px;
+            bottom: -8px;
         }
 	}
 }
